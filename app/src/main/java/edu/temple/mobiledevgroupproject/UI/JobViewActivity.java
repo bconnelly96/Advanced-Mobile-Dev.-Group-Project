@@ -7,6 +7,7 @@ import edu.temple.mobiledevgroupproject.R;
 
 public class JobViewActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

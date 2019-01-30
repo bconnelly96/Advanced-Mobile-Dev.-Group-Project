@@ -1,18 +1,24 @@
 package edu.temple.mobiledevgroupproject.UI;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 import edu.temple.mobiledevgroupproject.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SignUpFragment extends Fragment {
+    EditText nameField;
+    EditText userNameField;
+    EditText passwordField;
+    //TODO: add Date Picking component for user's birthday
+    //TODO: add profile Image Picking component
+    //TODO: add general Location picking component
+    Button confirmButton;
 
 
     public SignUpFragment() {

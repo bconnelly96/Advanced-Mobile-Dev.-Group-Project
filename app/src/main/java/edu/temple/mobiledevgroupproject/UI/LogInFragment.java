@@ -1,19 +1,19 @@
 package edu.temple.mobiledevgroupproject.UI;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import edu.temple.mobiledevgroupproject.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LogInFragment extends Fragment {
-
+    EditText userNameField;
+    EditText passwordField;
+    Button confirmButton;
 
     public LogInFragment() {
         // Required empty public constructor
