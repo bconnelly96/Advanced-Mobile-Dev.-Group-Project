@@ -1,3 +1,8 @@
+/*SignUpFragment:
+*(1) Displays SignUp form to user
+*(2) Gets sign up data from UI elements
+*(3) Passes sign up data to parent activity*/
+
 package edu.temple.mobiledevgroupproject.UI;
 
 import android.os.Bundle;
@@ -9,9 +14,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import edu.temple.mobiledevgroupproject.BackEnd.User;
 import edu.temple.mobiledevgroupproject.R;
 
 public class SignUpFragment extends Fragment {
+    //layout objects
     EditText nameField;
     EditText userNameField;
     EditText passwordField;
@@ -20,10 +27,16 @@ public class SignUpFragment extends Fragment {
     //TODO: add general Location picking component
     Button confirmButton;
 
+    SignUpInterface signUpDataListener;
 
     public SignUpFragment() {
         // Required empty public constructor
     }
+
+    public interface SignUpInterface {
+        void getSignUpData(User userData);
+    }
+
 
 
     @Override

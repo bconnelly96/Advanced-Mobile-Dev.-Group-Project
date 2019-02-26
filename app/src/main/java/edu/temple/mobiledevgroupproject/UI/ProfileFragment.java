@@ -1,3 +1,7 @@
+/*ProfileFragment:
+*(1) Receives User from parent activity
+*(2) Sets and Displays its UI elements using User object received*/
+
 package edu.temple.mobiledevgroupproject.UI;
 
 import android.os.Bundle;
@@ -10,13 +14,17 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import edu.temple.mobiledevgroupproject.BackEnd.User;
 import edu.temple.mobiledevgroupproject.R;
 
 public class ProfileFragment extends Fragment {
+    //layout objects
     private TextView userNameView;
     private TextView nameView;
-    private TextView generalLocView;
+    private TextView ageView;
     private RatingBar userRatingView;
+
+    User user;
 
     public ProfileFragment() {
         // Required empty public constructor

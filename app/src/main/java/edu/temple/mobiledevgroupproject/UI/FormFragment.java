@@ -1,3 +1,8 @@
+/*FormFragment:
+*(1) Displays fields for Job data retrieval
+*(2) Gets Posted Job data from user
+*(3) Hands valid Job data to parent Activity*/
+
 package edu.temple.mobiledevgroupproject.UI;
 
 import android.os.Bundle;
@@ -7,14 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import edu.temple.mobiledevgroupproject.BackEnd.Job;
 import edu.temple.mobiledevgroupproject.R;
 
 public class FormFragment extends Fragment {
     private ListView scrollableList;
 
+    FormInterface formInterface;
 
     public FormFragment() {
         // Required empty public constructor
+    }
+
+    public interface FormInterface {
+        void getDataFromForm(Job jobData);
     }
 
 

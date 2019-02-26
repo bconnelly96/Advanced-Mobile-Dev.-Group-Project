@@ -1,3 +1,6 @@
+/*User:
+*(1) Represents a user of the application */
+
 package edu.temple.mobiledevgroupproject.BackEnd;
 
 import android.graphics.drawable.Drawable;
@@ -11,9 +14,8 @@ public class User {
     private String userName;
     private String password;
     private Date userBirthDay;
-    private MapObject generalLoc;
-    private ArrayList<Job> previousJobs;
-    private ArrayList<Job> currentJobs;
+    private Record<String> previousJobs;
+    private Record<Job> currentJobs;
     private double userRating;
     private Drawable profileImage;
 }

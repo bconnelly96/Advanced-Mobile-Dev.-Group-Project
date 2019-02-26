@@ -1,6 +1,11 @@
+/*Job:
+*(1) Represents a job to be posted by User */
+
 package edu.temple.mobiledevgroupproject.BackEnd;
 
 import android.graphics.drawable.Drawable;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +17,7 @@ public class Job {
     private ArrayList<Drawable> jobImages;
     private Date datePosted;
     private Date dateOfJob;
-    private String safetyConcerns;
-    private String necessaryTools;
-    private MapObject mapData;
+    private LatLng location;
     private User user;
+    private ArrayList<Comment> comments;
 }
