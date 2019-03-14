@@ -3,6 +3,9 @@
 
 package edu.temple.mobiledevgroupproject.BackEnd;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Record<T> {
@@ -26,5 +29,30 @@ public class Record<T> {
 
     public T getRecordType() {
         return recordType;
+    }
+
+    public void setRecordData(ArrayList<T> recordData) {
+        this.recordData = recordData;
+    }
+
+    public void setRecordName(String recordName) {
+        this.recordName = recordName;
+    }
+
+    public void setRecordType(T recordType) {
+        this.recordType = recordType;
+    }
+
+    //Returns a JSONObject containing values of instance's fields
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+           jsonObject.put("name", recordName);
+           jsonObject.put("type", recordType);
+           jsonObject.put("date", recordData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

@@ -16,7 +16,8 @@ import edu.temple.mobiledevgroupproject.BackEnd.Job;
 import edu.temple.mobiledevgroupproject.R;
 
 public class FormFragment extends Fragment {
-    private ListView scrollableList;
+    //layout objects
+
 
     FormInterface formInterface;
 

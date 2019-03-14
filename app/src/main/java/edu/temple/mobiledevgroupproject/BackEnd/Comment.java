@@ -4,15 +4,18 @@
 
 package edu.temple.mobiledevgroupproject.BackEnd;
 
-import java.util.Date;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Calendar;
 
 public class Comment {
     private String text;
     private User user;
-    private Date datePosted;
+    private Calendar datePosted;
     private Job associatedJob;
 
-    public Comment(String text, User user, Date datePosted, Job associatedJob) {
+    public Comment(String text, User user, Calendar datePosted, Job associatedJob) {
         this.text = text;
         this.user = user;
         this.datePosted = datePosted;
@@ -27,11 +30,41 @@ public class Comment {
         return user;
     }
 
-    public Date getDatePosted() {
+    public Calendar getDatePosted() {
         return datePosted;
     }
 
     public Job getAssociatedJob() {
         return associatedJob;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setDatePosted(Calendar datePosted) {
+        this.datePosted = datePosted;
+    }
+
+    public void setAssociatedJob(Job associatedJob) {
+        this.associatedJob = associatedJob;
+    }
+
+    //Returns a JSONObject containing values of instance's fields
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("text", text);
+            jsonObject.put("date_posted", datePosted);
+            jsonObject.put("user_id", user);
+            jsonObject.put("job_id", associatedJob);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

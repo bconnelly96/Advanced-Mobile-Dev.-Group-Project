@@ -1,23 +1,92 @@
 /*Job:
-*(1) Represents a job to be posted by User */
+*(1) Represents a job to be posted by User
+*(2) Implemented using Builder pattern */
 
 package edu.temple.mobiledevgroupproject.BackEnd;
 
-import android.graphics.drawable.Drawable;
-
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Calendar;
 import java.util.Date;
 
-//TODO: Implement class using Builder Pattern
 public class Job {
     private String jobTitle;
     private String jobDescription;
-    private ArrayList<Drawable> jobImages;
-    private Date datePosted;
-    private Date dateOfJob;
+    private Calendar datePosted;
+    private Calendar dateOfJob;
     private LatLng location;
     private User user;
-    private ArrayList<Comment> comments;
+    private Record<Comment> comments;
+
+    private Job(String jobTitle, String jobDescription, Calendar datePosted, Calendar dateOfJob, LatLng location, User user, Record<Comment> comments) {
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.datePosted = datePosted;
+        this.dateOfJob = dateOfJob;
+        this.location = location;
+        this.user = user;
+        this.comments = comments;
+    }
+
+    public static class Builder {
+        private static String jobTitle;
+        private static String jobDescription;
+        private static Calendar datePosted;
+        private static Calendar dateOfJob;
+        private static LatLng location;
+        private static User user;
+        private static Record<Comment> comments;
+
+        public static void setTitle(String jobTitle) {
+            Job.Builder.jobTitle = jobTitle;
+        }
+
+        public static void setDescription(String jobDescription) {
+            Job.Builder.jobDescription = jobDescription;
+        }
+
+        public static void setDatePosted(Calendar datePosted) {
+            Job.Builder.datePosted = datePosted;
+        }
+
+        public static void setDateOfJob(Calendar dateOfJob) {
+            Builder.dateOfJob = dateOfJob;
+        }
+
+        public static void setLocation(LatLng location) {
+            Job.Builder.location = location;
+        }
+
+        public static void setUser(User user) {
+            Job.Builder.user = user;
+        }
+
+        public static void setComments(Record<Comment> comments) {
+            Job.Builder.comments = comments;
+        }
+
+        public static Job build() {
+            return new Job(jobTitle, jobDescription, datePosted, dateOfJob, location, user, comments);
+        }
+    }
+
+    //Returns a JSONObject containing values of instance's fields
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("title", jobTitle);
+            jsonObject.put("desc", jobDescription);
+            jsonObject.put("date", dateOfJob);
+            jsonObject.put("date_poster", datePosted);
+            jsonObject.put("loc_data", location);
+            jsonObject.put("user_id", user);
+            jsonObject.put("record_id", comments);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
 }
