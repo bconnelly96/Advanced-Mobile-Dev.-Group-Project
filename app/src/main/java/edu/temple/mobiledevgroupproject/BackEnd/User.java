@@ -14,17 +14,20 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class User {
+    public final String CIVILIAN = "civilian";
+    public final String ORGANIZATION = "organization";
+
     private String name;
     private String userClass;
     private String userName;
     private String password;
-    private Calendar userBirthDay;
+    private SimpleDate userBirthDay;
     private Record<Job> previousJobs;
     private Record<Job> currentEnrolledJobs;
     private Record<Job> currentPostedJobs;
     private double userRating;
 
-    private User(String name, String userClass, String userName, String password, Calendar userBirthDay, Record<Job> previousJobs, Record<Job> currentEnrolledJobs, Record<Job> currentPostedJobs, double userRating) {
+    private User(String name, String userClass, String userName, String password, SimpleDate userBirthDay, Record<Job> previousJobs, Record<Job> currentEnrolledJobs, Record<Job> currentPostedJobs, double userRating) {
         this.name = name;
         this.userClass = userClass;
         this.userName = userName;
@@ -41,7 +44,7 @@ public class User {
         private static String userClass;
         private static String userName;
         private static String password;
-        private static Calendar userBirthDay;
+        private static SimpleDate userBirthDay;
         private static Record<Job> previousJobs;
         private static Record<Job> currentEnrolledJobs;
         private static Record<Job> currentPostedJobs;
@@ -63,7 +66,7 @@ public class User {
             User.Builder.password = password;
         }
 
-        public static void setUserBirthDay(Calendar userBirthDay) {
+        public static void setUserBirthDay(SimpleDate userBirthDay) {
             User.Builder.userBirthDay = userBirthDay;
         }
 

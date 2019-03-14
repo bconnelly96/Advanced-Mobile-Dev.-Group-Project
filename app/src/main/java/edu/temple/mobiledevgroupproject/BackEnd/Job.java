@@ -15,13 +15,13 @@ import java.util.Date;
 public class Job {
     private String jobTitle;
     private String jobDescription;
-    private Calendar datePosted;
-    private Calendar dateOfJob;
+    private SimpleDate datePosted;
+    private SimpleDate dateOfJob;
     private LatLng location;
     private User user;
     private Record<Comment> comments;
 
-    private Job(String jobTitle, String jobDescription, Calendar datePosted, Calendar dateOfJob, LatLng location, User user, Record<Comment> comments) {
+    private Job(String jobTitle, String jobDescription, SimpleDate datePosted, SimpleDate dateOfJob, LatLng location, User user, Record<Comment> comments) {
         this.jobTitle = jobTitle;
         this.jobDescription = jobDescription;
         this.datePosted = datePosted;
@@ -34,8 +34,8 @@ public class Job {
     public static class Builder {
         private static String jobTitle;
         private static String jobDescription;
-        private static Calendar datePosted;
-        private static Calendar dateOfJob;
+        private static SimpleDate datePosted;
+        private static SimpleDate dateOfJob;
         private static LatLng location;
         private static User user;
         private static Record<Comment> comments;
@@ -48,11 +48,11 @@ public class Job {
             Job.Builder.jobDescription = jobDescription;
         }
 
-        public static void setDatePosted(Calendar datePosted) {
+        public static void setDatePosted(SimpleDate datePosted) {
             Job.Builder.datePosted = datePosted;
         }
 
-        public static void setDateOfJob(Calendar dateOfJob) {
+        public static void setDateOfJob(SimpleDate dateOfJob) {
             Builder.dateOfJob = dateOfJob;
         }
 

@@ -12,14 +12,12 @@ import java.util.Calendar;
 public class Comment {
     private String text;
     private User user;
-    private Calendar datePosted;
-    private Job associatedJob;
+    private SimpleDate datePosted;
 
-    public Comment(String text, User user, Calendar datePosted, Job associatedJob) {
+    public Comment(String text, User user, SimpleDate datePosted) {
         this.text = text;
         this.user = user;
-        this.datePosted = datePosted;
-        this.associatedJob = associatedJob;
+        this.datePosted = datePosted;;
     }
 
     public String getCommentText() {
@@ -30,12 +28,8 @@ public class Comment {
         return user;
     }
 
-    public Calendar getDatePosted() {
+    public SimpleDate getDatePosted() {
         return datePosted;
-    }
-
-    public Job getAssociatedJob() {
-        return associatedJob;
     }
 
     public void setText(String text) {
@@ -46,12 +40,8 @@ public class Comment {
         this.user = user;
     }
 
-    public void setDatePosted(Calendar datePosted) {
+    public void setDatePosted(SimpleDate datePosted) {
         this.datePosted = datePosted;
-    }
-
-    public void setAssociatedJob(Job associatedJob) {
-        this.associatedJob = associatedJob;
     }
 
     //Returns a JSONObject containing values of instance's fields
