@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import edu.temple.mobiledevgroupproject.BackEnd.Job;
+import edu.temple.mobiledevgroupproject.Objects.Job;
 import edu.temple.mobiledevgroupproject.R;
 
 public class JobViewActivity extends AppCompatActivity {

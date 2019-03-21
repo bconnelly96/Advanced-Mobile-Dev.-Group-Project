@@ -12,9 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import edu.temple.mobiledevgroupproject.BackEnd.User;
+import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.R;
 
 public class ProfileFragment extends Fragment {
