@@ -18,7 +18,7 @@ import com.google.android.gms.maps.MapView;
 
 import java.util.ArrayList;
 
-import edu.temple.mobiledevgroupproject.BackEnd.Job;
+import edu.temple.mobiledevgroupproject.Objects.Job;
 import edu.temple.mobiledevgroupproject.R;
 
 public class MapFragment extends Fragment {

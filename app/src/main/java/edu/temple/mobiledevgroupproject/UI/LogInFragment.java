@@ -40,5 +40,7 @@ public class LogInFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_log_in, container, false);
+
+        
     }
 }

@@ -10,13 +10,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-import edu.temple.mobiledevgroupproject.BackEnd.Job;
+import edu.temple.mobiledevgroupproject.Objects.Job;
 import edu.temple.mobiledevgroupproject.R;
 
 public class FormFragment extends Fragment {
-    private ListView scrollableList;
+    //layout objects
+
 
     FormInterface formInterface;
 
