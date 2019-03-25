@@ -5,10 +5,94 @@
     android:layout_height="match_parent"
     tools:context=".UI.SignUpFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/signUpTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textSize="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="30dp"/>
+
+        <TextView
+            android:id="@+id/newUsernameLabel"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:text="Username:"
+            android:layout_marginVertical="30dp"
+            android:layout_below="@+id/signUpTitle"/>
+
+        <EditText
+            android:id="@+id/newUsernameEditText"
+            android:layout_width="200dp"
+            android:layout_height="25dp"
+            android:layout_toRightOf="@+id/newUsernameLabel"
+            android:layout_marginVertical="30dp"
+            android:layout_below="@+id/signUpTitle"/>
+
+        <TextView
+            android:id="@+id/newPasswordLabel"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:text="Password:"
+            android:layout_below="@+id/newUsernameLabel"
+            android:layout_marginVertical="30dp"/>
+
+        <EditText
+            android:id="@+id/newPasswordEditText"
+            android:layout_width="200dp"
+            android:layout_height="25dp"
+            android:layout_toRightOf="@+id/newPasswordLabel"
+            android:layout_below="@+id/newUsernameEditText"
+            android:layout_marginVertical="30dp"
+            android:inputType="textPassword"/>
+
+        <TextView
+            android:id="@+id/emailLabel"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:text="Email:"
+            android:layout_below="@+id/newPasswordLabel"
+            android:layout_marginVertical="30dp"/>
+
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="200dp"
+            android:layout_height="25dp"
+            android:layout_toRightOf="@+id/emailLabel"
+            android:layout_below="@+id/newPasswordEditText"
+            android:layout_marginVertical="30dp"/>
+
+        <TextView
+            android:id="@+id/organizationLabel"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:text="Organization:"
+            android:layout_below="@+id/emailLabel"
+            android:layout_marginVertical="30dp"/>
+
+        <EditText
+            android:id="@+id/organizationEditText"
+            android:layout_width="200dp"
+            android:layout_height="25dp"
+            android:layout_toRightOf="@+id/organizationLabel"
+            android:layout_below="@+id/emailEditText"
+            android:layout_marginVertical="30dp"/>
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="Submit"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/organizationEditText"
+            android:layout_marginTop="30dp"/>
+
+    </RelativeLayout>
 </FrameLayout>
