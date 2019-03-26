@@ -1,6 +1,27 @@
 <resources>
     <string name="app_name">MobileDevGroupProject</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="username">User Name</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="login_success">Log-In Successful</string>
+    <string name="login_fail">One or More Log-In Fields is Invalid</string>
+    <string name="empty_fields">One or More Fields is Empty</string>
+    <string name="name_field">Full Name</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="month">Month</string>
+    <string name="day">Day</string>
+    <string name="year">Year</string>
+    <string name="birthday">Birthday</string>
+    <string name="signup_fail">One or More Sign-Up Fields is Invalid</string>
+    <string name="signup_success">Sign-Up Successful</string>
+    <string name="login_button_text">Log-In To An Existing Account</string>
+    <string name="signup_button_text">Sign-Up For A New Account</string>
+    <string name="job_list">Opportunities List</string>
+    <string name="profile">Profile</string>
+    <string name="post_job">Post New Opportunity</string>
+    <string name="map">Map</string>
+    <string name="action_refresh">Refresh</string>
 </resources>

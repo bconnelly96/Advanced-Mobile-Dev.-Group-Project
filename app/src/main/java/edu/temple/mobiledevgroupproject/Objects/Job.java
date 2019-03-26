@@ -1,6 +1,5 @@
 /*Job:
-*(1) Represents a job to be posted by User
-*(2) Implemented using Builder pattern */
+*(1) Represents a job to be posted by User*/
 
 package edu.temple.mobiledevgroupproject.Objects;
 
@@ -19,56 +18,68 @@ public class Job {
     private User user;
     private Record<Comment> comments;
 
-    private Job(String jobTitle, String jobDescription, SimpleDate datePosted, SimpleDate dateOfJob, LatLng location, User user, Record<Comment> comments) {
+
+    public Job setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
-        this.jobDescription = jobDescription;
-        this.datePosted = datePosted;
-        this.dateOfJob = dateOfJob;
-        this.location = location;
-        this.user = user;
-        this.comments = comments;
+        return this;
     }
 
-    public static class Builder {
-        private static String jobTitle;
-        private static String jobDescription;
-        private static SimpleDate datePosted;
-        private static SimpleDate dateOfJob;
-        private static LatLng location;
-        private static User user;
-        private static Record<Comment> comments;
+    public Job setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
+        return this;
+    }
 
-        public static void setTitle(String jobTitle) {
-            Job.Builder.jobTitle = jobTitle;
-        }
+    public Job setDatePosted(SimpleDate datePosted) {
+        this.datePosted = datePosted;
+        return this;
+    }
 
-        public static void setDescription(String jobDescription) {
-            Job.Builder.jobDescription = jobDescription;
-        }
+    public Job setDateOfJob(SimpleDate dateOfJob) {
+        this.dateOfJob = dateOfJob;
+        return this;
+    }
 
-        public static void setDatePosted(SimpleDate datePosted) {
-            Job.Builder.datePosted = datePosted;
-        }
+    public Job setLocation(LatLng location) {
+        this.location = location;
+        return this;
+    }
 
-        public static void setDateOfJob(SimpleDate dateOfJob) {
-            Builder.dateOfJob = dateOfJob;
-        }
+    public Job setUser(User user) {
+        this.user = user;
+        return this;
+    }
 
-        public static void setLocation(LatLng location) {
-            Job.Builder.location = location;
-        }
+    public Job setComments(Record<Comment> comments) {
+        this.comments = comments;
+        return this;
+    }
 
-        public static void setUser(User user) {
-            Job.Builder.user = user;
-        }
+    public String getJobTitle() {
+        return jobTitle;
+    }
 
-        public static void setComments(Record<Comment> comments) {
-            Job.Builder.comments = comments;
-        }
+    public String getJobDescription() {
+        return jobDescription;
+    }
 
-        public static Job build() {
-            return new Job(jobTitle, jobDescription, datePosted, dateOfJob, location, user, comments);
-        }
+    public SimpleDate getDatePosted() {
+        return datePosted;
+    }
+
+    public SimpleDate getDateOfJob() {
+        return dateOfJob;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Record<Comment> getComments() {
+        return comments;
     }
 
     //Returns a JSONObject containing values of instance's fields
