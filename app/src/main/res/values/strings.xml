@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MobileDevGroupProject</string>
 
+    <string name="api_key">AIzaSyDcMIcnAcc3lZB-XGr-xVyiVfExQ-_L4jA</string>
     <string name="username">User Name</string>
     <string name="name">Name</string>
     <string name="password">Password</string>

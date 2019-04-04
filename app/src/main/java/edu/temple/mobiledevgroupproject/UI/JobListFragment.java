@@ -6,25 +6,28 @@
 
 package edu.temple.mobiledevgroupproject.UI;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import edu.temple.mobiledevgroupproject.Objects.Job;
 import edu.temple.mobiledevgroupproject.R;
 
-public class JobListFragment extends Fragment {
-    ListView jobListView;
-    Spinner jobSortSpinner;
+public class JobListFragment extends Fragment implements RecyclerViewItemClicked {
+    //layout objects
+    RecyclerView recyclerView;
+    ListAdapter listAdapter;
 
-    ArrayList<Job> jobList;
-    JobSelectedInterface jobSelectedListener;
+    private ArrayList<Job> jobList;
+    public JobSelectedInterface jobSelectedListener;
 
     public JobListFragment() {
         // Required empty public constructor
@@ -35,14 +38,40 @@ public class JobListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_job_list, container, false);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        //jobSelectedListener = (JobSelectedInterface) context;
     }
 
-    //called by parent when user clicks refresh button in actionbar
-    public void updateList(ArrayList<Job> jobList) {
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        jobSelectedListener = null;
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_job_list, container, false);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            jobList = (ArrayList<Job>) args.getSerializable("job_list");
+        }
+
+        recyclerView = view.findViewById(R.id.recycler_view);
+        listAdapter = new ListAdapter(jobList, this);
+        recyclerView.setAdapter(listAdapter);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+
+
+        return view;
+    }
+
+    @Override
+    public void userItemClick(View v, int position) {
+        Toast.makeText(getContext(), "clicked", Toast.LENGTH_SHORT).show();
     }
 }

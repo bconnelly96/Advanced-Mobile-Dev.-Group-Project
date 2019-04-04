@@ -34,80 +34,70 @@ import edu.temple.mobiledevgroupproject.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     //layout objects
+    GoogleMap googleMap;
     MapView mapView;
-    View mView;
-
-    Context context;
-    ArrayList<Job> jobsToDisplay;
-    JobSelectedInterface jobSelectedListener;
+    View view;
 
     public MapFragment() {
-        // Required empty public constructor
-    }
 
-    public interface JobSelectedInterface {
-        void jobSelected(Job selectedJob);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_map, container, false);
-
-        Bundle args = getArguments();
-        if (args != null) {
-            jobsToDisplay = (ArrayList<Job>) args.getSerializable("JOBS_TO_DISPLAY");
-        }
-        return mView;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        System.out.println("ON CREATE");
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mapView = mView.findViewById(R.id.map_view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_map, container, false);
+        mapView = view.findViewById(R.id.map_view);
         if (mapView != null) {
             mapView.onCreate(null);
-            mapView.onResume();
             mapView.getMapAsync(this);
         }
+
+        System.out.println("ON CREATE VIEW");
+        return view;
     }
+
+    /*@Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+        System.out.println("ON VIEW CREATED");
+    }*/
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        configureMap(googleMap, this.jobsToDisplay);
-    }
-
-    public void configureMap(GoogleMap googleMap, ArrayList<Job> jobsToDisplay) {
-        MapsInitializer.initialize(context);
+        MapsInitializer.initialize(getContext());
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        for (int i = 0; i < jobsToDisplay.size(); i++) {
-            //dummy markers
-            googleMap.addMarker(new MarkerOptions()
-            .position(new LatLng(40.7128, 74.0060))
-            .title("dummy title")
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-        }
-
-        CameraPosition camPos = CameraPosition.builder()
-                //dummy target
-                .target(new LatLng(40.7128, 74.0060))
-                .zoom(15)
-                .bearing(0)
-                .build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+        System.out.println("ON MAP READY");
     }
 
-    //called when user clicks refresh button in actionbar
-    public void updatedJobList(ArrayList<Job> updatedJobsToDisplay) {
-        jobsToDisplay = updatedJobsToDisplay;
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
 }

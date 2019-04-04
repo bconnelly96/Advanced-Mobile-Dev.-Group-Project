@@ -10,6 +10,7 @@ package edu.temple.mobiledevgroupproject.UI;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -20,6 +21,7 @@ import org.json.JSONException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -49,9 +51,7 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
         //fragmentContainer = findViewById(R.id.login_frag_container);
 
         if (savedDataExists()) {
-            launchIntent = new Intent(this, MainActivity.class);
-            launchIntent.putExtra("user", retrievedUserName);
-            startActivity(launchIntent);
+            startMainActivity(thisUser);
         } else {
             logInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,31 +75,39 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
                 }
             });
         }
-
-        //block waiting for result
-        //TODO find a better solution
-        while (thisUser == null) {
-
-        }
-
-        launchIntent = new Intent(this, MainActivity.class);
-        launchIntent.putExtra("user", thisUser);
     }
 
-    //receive existing user from fragment
+    //receive existing user from signin fragment; send to database; pass as extra to Intent; write to file
     @Override
     public void sendExistingUser(User existingUser, boolean saveData) {
-        thisUser = existingUser;
-
+        //write to file
         if (saveData) {
-
+            File file = new File(getFilesDir(), FILENAME);
+            JSONArray jsonArray = null;
+            jsonArray.put(existingUser.getUserName());
+            jsonArray.put(existingUser.getPassword());
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                fileOutputStream.write(jsonArray.toString().getBytes());
+                fileOutputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        //TODO SEND TO DATABASE
+
+        startMainActivity(existingUser);
     }
 
-    //receive new user from fragment
+    //receive new user from signup fragment; send to database, pass as an extra to Intent, launch main activity
     @Override
     public void sendNewUser(User newUser) {
-        thisUser = newUser;
+        //TODO SEND TO DATABASE
+
+        startMainActivity(newUser);
     }
 
     //look for user login data in internal storage
@@ -124,6 +132,9 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
                 /*username/password written into json array with format:
                  *["<username>" , "<password>"]*/
                 retrievedUserName = jsonArray.getString(0);
+
+                //TODO GET USER DATA FROM DATABASE, CREATE NEW USER OBJECT.
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -135,8 +146,14 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
         return fileExists;
     }
 
-    private void saveUserData() {
-        File file = new File(getFilesDir(), FILENAME);
+    public void sendUserToDataBase(User user) {
 
     }
+
+    public void startMainActivity(User extraData) {
+        launchIntent = new Intent(this, MainActivity.class);
+        launchIntent.putExtra("user", extraData);
+        startActivity(launchIntent);
+    }
+
 }

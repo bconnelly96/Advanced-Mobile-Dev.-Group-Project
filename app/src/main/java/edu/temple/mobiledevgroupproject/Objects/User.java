@@ -4,6 +4,7 @@
 
 package edu.temple.mobiledevgroupproject.Objects;
 
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
 import org.json.JSONException;
@@ -31,6 +32,8 @@ public class User implements Serializable {
     private Record<Job> currentEnrolledJobs;
     private Record<Job> currentPostedJobs;
     private double userRating;
+    //bitmap image encoded to Base 64 String.
+    private String profileImage;
 
     public User setName(String name) {
         this.name = name;
@@ -72,6 +75,11 @@ public class User implements Serializable {
         return this;
     }
 
+    /*public User setprofileImage(Drawable profileImage) {
+        this.profileImage = encodeToString(profileImage);
+        return this;
+    }*/
+
     public String getName() {
         return name;
     }
@@ -103,6 +111,15 @@ public class User implements Serializable {
     public double getUserRating() {
         return userRating;
     }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    //return the Drawable form of user's profile image
+   /* public Drawable getDecodedProfileImg() {
+        return decodeToDrawable(profileImage);
+    }*/
 
     //Returns a JSONObject containing values of instance's fields
     //{"full_name":<full name>,"name":<username>,"password":<password>,"age":<age>,"rating":<rating>,"posted_jobs":<record id>,"curr_jobs":<record id>,"prev_jobs":<record id>}
@@ -139,4 +156,14 @@ public class User implements Serializable {
         }
         return hashedPassword;
     }
+
+    //encode user's profile image to a Base 64 String
+    /*private String encodeToString(Drawable profileImage) {
+
+    }
+
+    //decode a user's profile image to Drawable
+    private Drawable decodeToDrawable(String profileImageString) {
+
+    }*/
 }
