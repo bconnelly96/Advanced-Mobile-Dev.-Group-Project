@@ -1,5 +1,6 @@
 package edu.temple.mobiledevgroupproject.UI;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ public class JobViewActivity extends AppCompatActivity {
     TextView jobPostedView;
     TextView jobLocView;
     TextView jobUserView;
-    //TODO: add UI elements to support commenting and scrolling through job images
+    //TODO: add UI elements to support commenting.
 
     Job jobToDisplay;
 
@@ -23,5 +24,10 @@ public class JobViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_view);
+
+        Intent recIntent = getIntent();
+        if (recIntent != null) {
+            jobToDisplay = (Job) recIntent.getSerializableExtra("this_job");
+        }
     }
 }

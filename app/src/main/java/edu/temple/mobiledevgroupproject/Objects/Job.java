@@ -9,7 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Job {
+import java.io.Serializable;
+
+public class Job implements Serializable {
     private String jobTitle;
     private String jobDescription;
     private SimpleDate datePosted;
