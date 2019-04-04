@@ -4,15 +4,27 @@
 
 package edu.temple.mobiledevgroupproject.Objects;
 
+import android.graphics.drawable.Drawable;
+import android.util.Base64;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User {
-    public static final String CIVILIAN = "civilian";
-    public static final String ORGANIZATION = "organization";
+import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.util.Random;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+public class User implements Serializable {
+    public static final double DEFAULT_RATING = 3.0;
+    public static final double MIN_RATING = 0.0;
+    public static final double MAX_RATING = 5.0;
 
     private String name;
-    private String userClass;
     private String userName;
     private String password;
     private SimpleDate userBirthDay;
@@ -20,77 +32,100 @@ public class User {
     private Record<Job> currentEnrolledJobs;
     private Record<Job> currentPostedJobs;
     private double userRating;
+    //bitmap image encoded to Base 64 String.
+    private String profileImage;
 
-    private User(String name, String userClass, String userName, String password, SimpleDate userBirthDay, Record<Job> previousJobs, Record<Job> currentEnrolledJobs, Record<Job> currentPostedJobs, double userRating) {
+    public User setName(String name) {
         this.name = name;
-        this.userClass = userClass;
+        return this;
+    }
+
+    public User setUserName(String userName) {
         this.userName = userName;
+        return this;
+    }
+
+    public User setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public User setUserBirthDay(SimpleDate userBirthDay) {
         this.userBirthDay = userBirthDay;
+        return this;
+    }
+
+    public User setPreviousJobs(Record<Job> previousJobs) {
         this.previousJobs = previousJobs;
+        return this;
+    }
+
+    public User setCurrentEnrolledJobs(Record<Job> currentEnrolledJobs) {
         this.currentEnrolledJobs = currentEnrolledJobs;
+        return this;
+    }
+
+    public User setCurrentPostedJobs(Record<Job> currentPostedJobs) {
         this.currentPostedJobs = currentPostedJobs;
+        return this;
+    }
+
+    public User setUserRating(double userRating) {
         this.userRating = userRating;
+        return this;
     }
 
-    public static class Builder {
-        private static String name;
-        private static String userClass;
-        private static String userName;
-        private static String password;
-        private static SimpleDate userBirthDay;
-        private static Record<Job> previousJobs;
-        private static Record<Job> currentEnrolledJobs;
-        private static Record<Job> currentPostedJobs;
-        private static double userRating;
+    /*public User setprofileImage(Drawable profileImage) {
+        this.profileImage = encodeToString(profileImage);
+        return this;
+    }*/
 
-        public static void setName(String name) {
-            User.Builder.name = name;
-        }
-
-        public static void setUserClass(String userClass) {
-            User.Builder.userClass = userClass;
-        }
-
-        public static void setUserName(String userName) {
-            User.Builder.userName = userName;
-        }
-
-        public static void setPassword(String password) {
-            User.Builder.password = password;
-        }
-
-        public static void setUserBirthDay(SimpleDate userBirthDay) {
-            User.Builder.userBirthDay = userBirthDay;
-        }
-
-        public static void setPreviousJobs(Record<Job> previousJobs) {
-            User.Builder.previousJobs = previousJobs;
-        }
-
-        public static void setCurrentEnrolledJobs(Record<Job> currentEnrolledJobs) {
-            User.Builder.currentEnrolledJobs = currentEnrolledJobs;
-        }
-
-        public static void setCurrentPostedJobs(Record<Job> currentPostedJobs) {
-            User.Builder.currentPostedJobs = currentPostedJobs;
-        }
-
-        public static void setUserRating(double userRating) {
-            User.Builder.userRating = userRating;
-        }
-
-        public static User build() {
-            return new User(name, userClass, userName, password, userBirthDay, previousJobs, currentEnrolledJobs, currentPostedJobs, userRating);
-        }
+    public String getName() {
+        return name;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public SimpleDate getUserBirthDay() {
+        return userBirthDay;
+    }
+
+    public Record<Job> getPreviousJobs() {
+        return previousJobs;
+    }
+
+    public Record<Job> getCurrentEnrolledJobs() {
+        return currentEnrolledJobs;
+    }
+
+    public Record<Job> getCurrentPostedJobs() {
+        return currentPostedJobs;
+    }
+
+    public double getUserRating() {
+        return userRating;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    //return the Drawable form of user's profile image
+   /* public Drawable getDecodedProfileImg() {
+        return decodeToDrawable(profileImage);
+    }*/
 
     //Returns a JSONObject containing values of instance's fields
-    //{"class":<class>,"full_name":<full name>,"name":<username>,"password":<password>,"age":<age>,"rating":<rating>,"posted_jobs":<record id>,"curr_jobs":<record id>,"prev_jobs":<record id>}
+    //{"full_name":<full name>,"name":<username>,"password":<password>,"age":<age>,"rating":<rating>,"posted_jobs":<record id>,"curr_jobs":<record id>,"prev_jobs":<record id>}
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("class", userClass);
             jsonObject.put("full_name", name);
             jsonObject.put("name", userName);
             jsonObject.put("password", password);
@@ -104,4 +139,31 @@ public class User {
         }
         return jsonObject;
     }
+
+    public static String hashAndSaltPassword(String password) {
+        String hashedPassword = null;
+        byte[] salt = new byte[16];
+        new Random().nextBytes(salt);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+        try {
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte [] hash = factory.generateSecret(spec).getEncoded();
+            hashedPassword = Base64.encodeToString(hash, Base64.DEFAULT);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return hashedPassword;
+    }
+
+    //encode user's profile image to a Base 64 String
+    /*private String encodeToString(Drawable profileImage) {
+
+    }
+
+    //decode a user's profile image to Drawable
+    private Drawable decodeToDrawable(String profileImageString) {
+
+    }*/
 }

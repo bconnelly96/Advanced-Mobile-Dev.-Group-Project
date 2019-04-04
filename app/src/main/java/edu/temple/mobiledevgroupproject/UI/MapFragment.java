@@ -9,45 +9,108 @@ package edu.temple.mobiledevgroupproject.UI;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import edu.temple.mobiledevgroupproject.Objects.Job;
+import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.R;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements OnMapReadyCallback {
     //layout objects
+    GoogleMap googleMap;
     MapView mapView;
     View mView;
 
-    Context mContext;
+    //other objects
     ArrayList<Job> jobsToDisplay;
-    JobSelectedInterface jobSelectedListener;
 
     public MapFragment() {
-        // Required empty public constructor
-    }
 
-    public interface JobSelectedInterface {
-        void jobSelected(Job selectedJob);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        mView = inflater.inflate(R.layout.fragment_map, container, false);
+        Bundle args = getArguments();
+        if (args != null) {
+            jobsToDisplay = (ArrayList<Job>) args.getSerializable("jobs_to_display");
+        }
+        return mView;
     }
 
-    //called when user clicks refresh button in actionbar
-    public void updatedJobList(ArrayList<Job> updatedJobsToDisplay) {
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mapView = mView.findViewById(R.id.map_view);
+        if (mapView != null) {
+            mapView.onCreate(null);
+            mapView.onResume();
+            mapView.getMapAsync(this);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        configureMap(jobsToDisplay);
+    }
+
+    //called when fragment first created and upon userlist update
+    public void configureMap(ArrayList<Job> jobsToDisplay) {
+        MapsInitializer.initialize(getContext());
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        //TODO implement fetching of currrent position. Currently position is hardcoded.
+        LatLng userPos = new LatLng(39.981991, -75.153053);
+        CameraPosition camPos = CameraPosition.builder()
+                .target(userPos)
+                .zoom(15)
+                .bearing(0)
+                .build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+        //add user pos. as marker
+        googleMap.addMarker(new MarkerOptions()
+                .position(userPos)
+                .title("USER POSITION")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+        if (jobsToDisplay != null) {
+            for (int i = 0; i < jobsToDisplay.size(); i++) {
+                Job thisJob = jobsToDisplay.get(i);
+                googleMap.addMarker(new MarkerOptions()
+                        .position(thisJob.getLocation())
+                        .title(thisJob.getJobTitle())
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            }
+        }
+    }
 }
