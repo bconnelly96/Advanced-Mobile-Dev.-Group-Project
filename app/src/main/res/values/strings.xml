@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MobileDevGroupProject</string>
+    <string name="app_name">help!</string>
 
     <string name="api_key">AIzaSyDcMIcnAcc3lZB-XGr-xVyiVfExQ-_L4jA</string>
     <string name="username">User Name</string>
@@ -25,4 +25,9 @@
     <string name="post_job">Post New Opportunity</string>
     <string name="map">Map</string>
     <string name="action_refresh">Refresh</string>
+    <string name="confirm_job">Are you sure you would like to participate in this volunteering opportunity?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="job_added">Congratulations. You are officially signed up!</string>
+    <string name="signup_for_job">Sign up for this Opportunity</string>
 </resources>

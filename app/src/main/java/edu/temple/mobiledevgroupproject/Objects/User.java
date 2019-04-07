@@ -80,6 +80,18 @@ public class User implements Serializable {
         return this;
     }*/
 
+    public void updateCurrentEnrolledJobs(Job newJob) {
+        currentEnrolledJobs.addDataToRecord(newJob);
+    }
+
+    public void updateCurrentPostedJobs(Job newJob) {
+        currentPostedJobs.addDataToRecord(newJob);
+    }
+
+    public void updatePreviousJobs(Job newJob) {
+        previousJobs.addDataToRecord(newJob);
+    }
+
     public String getName() {
         return name;
     }

@@ -15,10 +15,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -27,16 +24,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import edu.temple.mobiledevgroupproject.Objects.Job;
-import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.R;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     //layout objects
     GoogleMap googleMap;
     MapView mapView;
@@ -44,9 +40,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     //other objects
     ArrayList<Job> jobsToDisplay;
+    MapClickInterface mapClickListener;
 
     public MapFragment() {
 
+    }
+
+    public interface MapClickInterface {
+        public void jobSelected(Job selectedJob);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mapClickListener = (MapClickInterface) context;
     }
 
     @Override
@@ -84,10 +91,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         configureMap(jobsToDisplay);
     }
 
+    //this method will be expanded when custom info window is implemented.
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Job selectedJob = null;
+        for (int i = 0; i < jobsToDisplay.size(); i++) {
+            Job thisJob = jobsToDisplay.get(i);
+            if (marker.getTitle().equals(thisJob.getJobTitle())) {
+                selectedJob = thisJob;
+            }
+        }
+
+        if (selectedJob != null) {
+            mapClickListener.jobSelected(selectedJob);
+        }
+
+        return false;
+    }
+
     //called when fragment first created and upon userlist update
     public void configureMap(ArrayList<Job> jobsToDisplay) {
         MapsInitializer.initialize(getContext());
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap.setOnMarkerClickListener(this);
 
         //TODO implement fetching of currrent position. Currently position is hardcoded.
         LatLng userPos = new LatLng(39.981991, -75.153053);

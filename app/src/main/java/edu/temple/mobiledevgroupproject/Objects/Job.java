@@ -18,8 +18,7 @@ public class Job implements Serializable {
     private SimpleDate dateOfJob;
     private LatLng location;
     private User user;
-    private Record<Comment> comments;
-
+    private Record<Comment> commentList;
 
     public Job setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
@@ -51,8 +50,8 @@ public class Job implements Serializable {
         return this;
     }
 
-    public Job setComments(Record<Comment> comments) {
-        this.comments = comments;
+    public Job setCommentList(Record<Comment> commentList) {
+        this.commentList = commentList;
         return this;
     }
 
@@ -80,8 +79,8 @@ public class Job implements Serializable {
         return user;
     }
 
-    public Record<Comment> getComments() {
-        return comments;
+    public Record<Comment> getCommentList() {
+        return commentList;
     }
 
     //Returns a JSONObject containing values of instance's fields
@@ -110,7 +109,7 @@ public class Job implements Serializable {
             jsonObject.put("loc_data", locArray);
 
             jsonObject.put("user_id", user);
-            jsonObject.put("record_id", comments);
+            jsonObject.put("record_id", commentList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
