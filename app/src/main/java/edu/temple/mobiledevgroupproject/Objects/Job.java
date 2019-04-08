@@ -3,6 +3,9 @@
 
 package edu.temple.mobiledevgroupproject.Objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -11,7 +14,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class Job implements Serializable {
+public class Job implements Parcelable {
     private String jobTitle;
     private String jobDescription;
     private SimpleDate datePosted;
@@ -83,8 +86,46 @@ public class Job implements Serializable {
         return commentList;
     }
 
-    //Returns a JSONObject containing values of instance's fields
-    //{"title":<job title>,"desc":<job description>,"date":[<month>,<day>,<year>],"date_posted":[<month>,<day>,<year>],"loc_data":[<latitude>,<longitude>],"user_id":<job's user's ID>, "record_id""<job's record's ID>}
+    protected Job(Parcel in) {
+        jobTitle = in.readString();
+        jobDescription = in.readString();
+        location = in.readParcelable(LatLng.class.getClassLoader());
+    }
+
+    public static final Creator<Job> CREATOR = new Creator<Job>() {
+        @Override
+        public Job createFromParcel(Parcel in) {
+            return new Job(in);
+        }
+
+        @Override
+        public Job[] newArray(int size) {
+            return new Job[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(jobTitle);
+        dest.writeString(jobDescription);
+        dest.writeValue(datePosted);
+        dest.writeValue(dateOfJob);
+        dest.writeValue(location);
+        dest.writeValue(user);
+        dest.writeValue(commentList);
+    }
+
+    /**
+     * Constructs a JSONObject based on a Job instance's fields.
+     * FORMAT: {"title":<job title>,"desc":<job description>,"date":[<month>,<day>,<year>],"date_posted":[<month>,<day>,<year>],
+     * "loc_data":[<latitude>,<longitude>],"user_id":<job's user's ID>, "record_id""<job's record's ID>}
+     * @return a Job instance's fields in JSONObject format.
+     */
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {

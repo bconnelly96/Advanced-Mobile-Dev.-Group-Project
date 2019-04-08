@@ -26,8 +26,11 @@ public class SimpleDate {
         return day;
     }
 
-    //Returns a JSONObject containing values of instance's fields
-    //{"month":<month>,"day":<day>,"year":<year>}
+    /**
+     * Constructs a JSONObject based on a SimpleDate instance's fields.
+     * FORMAT: {"month":<month>,"day":<day>,"year":<year>}
+     * @return a SimpleDate instance's fields in JSONObject format.
+     */
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
 

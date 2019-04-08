@@ -13,7 +13,6 @@ public class Record<T> {
     public static final String COMMENT_RECORD = "comment_record";
     public static final String JOB_RECORD = "job_record";
 
-
     private ArrayList<T> recordData;
     private String recordName;
     private String recordType;
@@ -40,8 +39,11 @@ public class Record<T> {
         recordData.add(data);
     }
 
-    //Returns a JSONObject containing values of instance's fields
-    //{"name":<name>,"type":<type>,"data":<[data1, data2, ... , dataN]>}
+    /**
+     * Constructs a JSONObject based on a Record instance's fields.
+     * FORMAT: {"name":<name>,"type":<type>,"data":<[data1, data2, ... , dataN]>}
+     * @return a Record instance's fields in JSONObject format.
+     */
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {

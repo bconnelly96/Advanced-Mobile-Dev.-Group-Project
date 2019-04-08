@@ -31,8 +31,11 @@ public class Comment {
         return datePosted;
     }
 
-    //Returns a JSONObject containing values of instance's fields
-    //{"text":<comment's text>,"date_posted":[<month>,<day>,<year>],"user_id":<comment's user's ID>}
+    /**
+     * Constructs a JSONObject based on a Comment instance's fields.
+     * FORMAT: {"text":<comment's text>,"date_posted":[<month>,<day>,<year>],"user_id":<comment's user's ID>}
+     * @return a Comment instance's fields in JSONObject format.
+     */
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {

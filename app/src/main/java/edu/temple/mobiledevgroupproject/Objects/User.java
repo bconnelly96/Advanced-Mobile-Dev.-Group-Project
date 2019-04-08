@@ -5,6 +5,8 @@
 package edu.temple.mobiledevgroupproject.Objects;
 
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Base64;
 
 import org.json.JSONException;
@@ -19,7 +21,7 @@ import java.util.Random;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-public class User implements Serializable {
+public class User implements Parcelable {
     public static final double DEFAULT_RATING = 3.0;
     public static final double MIN_RATING = 0.0;
     public static final double MAX_RATING = 5.0;
@@ -80,18 +82,6 @@ public class User implements Serializable {
         return this;
     }*/
 
-    public void updateCurrentEnrolledJobs(Job newJob) {
-        currentEnrolledJobs.addDataToRecord(newJob);
-    }
-
-    public void updateCurrentPostedJobs(Job newJob) {
-        currentPostedJobs.addDataToRecord(newJob);
-    }
-
-    public void updatePreviousJobs(Job newJob) {
-        previousJobs.addDataToRecord(newJob);
-    }
-
     public String getName() {
         return name;
     }
@@ -133,23 +123,16 @@ public class User implements Serializable {
         return decodeToDrawable(profileImage);
     }*/
 
-    //Returns a JSONObject containing values of instance's fields
-    //{"full_name":<full name>,"name":<username>,"password":<password>,"age":<age>,"rating":<rating>,"posted_jobs":<record id>,"curr_jobs":<record id>,"prev_jobs":<record id>}
-    public JSONObject toJSONObject() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("full_name", name);
-            jsonObject.put("name", userName);
-            jsonObject.put("password", password);
-            jsonObject.put("age", userBirthDay);
-            jsonObject.put("rating", userRating);
-            jsonObject.put("posted_jobs", currentPostedJobs);
-            jsonObject.put("curr_jobs", currentEnrolledJobs);
-            jsonObject.put("prev_jobs", previousJobs);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
+    public void updateCurrentEnrolledJobs(Job newJob) {
+        currentEnrolledJobs.addDataToRecord(newJob);
+    }
+
+    public void updateCurrentPostedJobs(Job newJob) {
+        currentPostedJobs.addDataToRecord(newJob);
+    }
+
+    public void updatePreviousJobs(Job newJob) {
+        previousJobs.addDataToRecord(newJob);
     }
 
     public static String hashAndSaltPassword(String password) {
@@ -169,6 +152,44 @@ public class User implements Serializable {
         return hashedPassword;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(userName);
+        dest.writeString(password);
+        dest.writeValue(userBirthDay);
+        dest.writeValue(previousJobs);
+        dest.writeValue(currentEnrolledJobs);
+        dest.writeValue(currentPostedJobs);
+        dest.writeDouble(userRating);
+        dest.writeString(profileImage);
+    }
+
+    protected User(Parcel in) {
+        name = in.readString();
+        userName = in.readString();
+        password = in.readString();
+        userRating = in.readDouble();
+        profileImage = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
     //encode user's profile image to a Base 64 String
     /*private String encodeToString(Drawable profileImage) {
 
@@ -178,4 +199,27 @@ public class User implements Serializable {
     private Drawable decodeToDrawable(String profileImageString) {
 
     }*/
+
+
+    /**
+     * Constructs a JSONObject based on a User instance's fields.
+     * FORMAT: {"full_name":<full name>,"name":<username>,"password":<password>,"age":<age>,"rating":<rating>,"posted_jobs":<record id>,"curr_jobs":<record id>,"prev_jobs":<record id>}
+     * @return a User instance's fields in JSONObject format.
+     */
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("full_name", name);
+            jsonObject.put("name", userName);
+            jsonObject.put("password", password);
+            jsonObject.put("age", userBirthDay);
+            jsonObject.put("rating", userRating);
+            jsonObject.put("posted_jobs", currentPostedJobs);
+            jsonObject.put("curr_jobs", currentEnrolledJobs);
+            jsonObject.put("prev_jobs", previousJobs);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
 }
