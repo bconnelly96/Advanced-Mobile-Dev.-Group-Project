@@ -68,7 +68,6 @@ public class LogInFragment extends Fragment {
                 String userName = userNameField.getText().toString();
                 String password = passwordField.getText().toString();
                 if (allFieldsHaveInput() && logInInfoValid(userName, password)) {
-
                     User constructedExistingUser = constructExistingUser(userName, password);
                     if (rememberMeBox.isChecked()) {
                         logInListener.sendExistingUser(constructedExistingUser, true);
@@ -88,20 +87,34 @@ public class LogInFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Check the value of each UI input to ensure all login fields have some input
+     * @return true if all fields have some input
+     */
     private boolean allFieldsHaveInput() {
         return (userNameField.getText().toString().trim().length() != 0) &&
                 (passwordField.getText().toString().trim().length() != 0);
     }
 
-    /*Checks if there is a user with userName in database.
-    * Checks that the password entered matches a hashed password corresponding with that user in database
-    * Returns true if both userName and password are valid*/
+    /**
+     * Query database to:
+     * (1) Determine if userName param. matches some username in D.B.
+     * (2) Determine if password param. matches some hashed/salted password in D.B.
+     * @param userName a String retrieved from 'username' UI field
+     * @param password a String retrieved from 'password' UI field
+     * @return true if the userName, password params. match some username, password pair in the D.B.
+     */
     private boolean logInInfoValid(String userName, String password) {
         return false;
     }
 
-    /*Query database for data of user with username 'userName'
-    * Construct and return User object with returned data.*/
+    /**
+     * Query database retrieving information of User with username and password pair matching userName and password params.
+     * Construct new User object.
+     * @param userName username String of an already validated user
+     * @param password password String of an already validated user
+     * @return new User object corresponding to the userName and password params.
+     */
     private User constructExistingUser(String userName, String password) {
         return null;
     }

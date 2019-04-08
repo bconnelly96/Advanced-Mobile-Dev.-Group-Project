@@ -77,7 +77,13 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
         }
     }
 
-    //receive existing user from signin fragment; send to database; pass as extra to Intent; write to file
+    /**
+     * Write username, password pair to save file with JSON format [<username> , <password>]
+     * Send existing user User object to database.
+     * Launch MainActivity.
+     * @param existingUser validated User object received from LogInFragment.java
+     * @param saveData boolean data specifying whether user wishes to create a save file for automatic login
+     */
     @Override
     public void sendExistingUser(User existingUser, boolean saveData) {
         //write to file
@@ -96,23 +102,26 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
                 e.printStackTrace();
             }
         }
-
-        //TODO SEND TO DATABASE
-
+        sendUserToDataBase(existingUser);
         startMainActivity(existingUser);
     }
 
-    //receive new user from signup fragment; send to database, pass as an extra to Intent, launch main activity
+    /**
+     * Sends new user information to database.
+     * Launches MainActivity.
+     * @param newUser User object constructed and received from SignUpFragment.java
+     */
     @Override
     public void sendNewUser(User newUser) {
-        //TODO SEND TO DATABASE
-
+        sendUserToDataBase(newUser);
         startMainActivity(newUser);
     }
 
-    //look for user login data in internal storage
-    //set username field if so
-    //return true if user login data exists
+    /**
+     * Checks device's internal storage for a username, password save file.
+     * If so, retrieves pair from file, queries database to retrieve User info matching pair in save file.
+     * @return true if a username, password pair in device's internal storage.
+     */
     private boolean savedDataExists() {
         File file = new File(getFilesDir(), FILENAME);
         boolean fileExists = false;
@@ -146,11 +155,19 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
         return fileExists;
     }
 
-    public void sendUserToDataBase(User user) {
+    /**
+     * Send signup/login user information to database
+     * @param user User object to be sent to database
+     */
+    private void sendUserToDataBase(User user) {
 
     }
 
-    public void startMainActivity(User extraData) {
+    /**
+     * Create a new Intent; use it to launch MainActivity.class
+     * @param extraData User object to be passed to MainActivity.class as Intent extra
+     */
+    private void startMainActivity(User extraData) {
         launchIntent = new Intent(this, MainActivity.class);
         launchIntent.putExtra("this_user", extraData);
         startActivity(launchIntent);

@@ -111,6 +111,10 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Check the value of each UI input to ensure all signup fields have some input
+     * @return true if all fields have some input
+     */
     private boolean allFieldsHaveInput() {
         return (userNameField.getText().toString().trim().length() != 0) &&
                 (nameField.getText().toString().trim().length() != 0) &&
@@ -120,13 +124,11 @@ public class SignUpFragment extends Fragment {
                 (yearField.getText().toString().trim().length() != 0);
     }
 
-    //return true if sign up info is unique
+    /**
+     * Get input from UI elements and query database to determine in signup info is unique
+     * @return true if signup info entered by user is unique
+     */
     private boolean signUpInfoValid() {
         return false;
-    }
-
-    //send new user instance to database.
-    private void sendDataToDatabase(User newUser) {
-
     }
 }
