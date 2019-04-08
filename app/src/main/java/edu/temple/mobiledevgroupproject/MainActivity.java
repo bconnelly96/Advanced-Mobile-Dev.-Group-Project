@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
 
         Intent recIntent = getIntent();
         if (recIntent != null) {
-            thisUser = (User) recIntent.getSerializableExtra("this_user");
+            thisUser = recIntent.getParcelableExtra("this_user");
         }
 
         //initialize layout objects

@@ -37,6 +37,10 @@ public class User implements Parcelable {
     //bitmap image encoded to Base 64 String.
     private String profileImage;
 
+    public User() {
+
+    }
+
     public User setName(String name) {
         this.name = name;
         return this;
@@ -152,6 +156,30 @@ public class User implements Parcelable {
         return hashedPassword;
     }
 
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    protected User(Parcel in) {
+        name = in.readString();
+        userName = in.readString();
+        password = in.readString();
+        userBirthDay = (SimpleDate) in.readValue(SimpleDate.class.getClassLoader());
+        previousJobs = (Record<Job>) in.readValue(Record.class.getClassLoader());
+        currentEnrolledJobs = (Record<Job>) in.readValue(Record.class.getClassLoader());
+        currentPostedJobs = (Record<Job>) in.readValue(Record.class.getClassLoader());
+        userRating = in.readDouble();
+        profileImage = in.readString();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -169,26 +197,6 @@ public class User implements Parcelable {
         dest.writeDouble(userRating);
         dest.writeString(profileImage);
     }
-
-    protected User(Parcel in) {
-        name = in.readString();
-        userName = in.readString();
-        password = in.readString();
-        userRating = in.readDouble();
-        profileImage = in.readString();
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     //encode user's profile image to a Base 64 String
     /*private String encodeToString(Drawable profileImage) {

@@ -23,6 +23,10 @@ public class Job implements Parcelable {
     private User user;
     private Record<Comment> commentList;
 
+    public Job() {
+
+    }
+
     public Job setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
         return this;
@@ -86,10 +90,8 @@ public class Job implements Parcelable {
         return commentList;
     }
 
-    protected Job(Parcel in) {
-        jobTitle = in.readString();
-        jobDescription = in.readString();
-        location = in.readParcelable(LatLng.class.getClassLoader());
+    public void updateCommentList(Comment newComment) {
+        commentList.addDataToRecord(newComment);
     }
 
     public static final Creator<Job> CREATOR = new Creator<Job>() {
@@ -103,6 +105,16 @@ public class Job implements Parcelable {
             return new Job[size];
         }
     };
+
+    protected Job(Parcel in) {
+        jobTitle = in.readString();
+        jobDescription = in.readString();
+        datePosted = (SimpleDate) in.readValue(SimpleDate.class.getClassLoader());
+        dateOfJob = (SimpleDate) in.readValue(SimpleDate.class.getClassLoader());
+        location = (LatLng) in.readValue(SimpleDate.class.getClassLoader());
+        user = (User) in.readValue(User.class.getClassLoader());
+        commentList = (Record<Comment>) in.readValue(Record.class.getClassLoader());
+    }
 
     @Override
     public int describeContents() {
