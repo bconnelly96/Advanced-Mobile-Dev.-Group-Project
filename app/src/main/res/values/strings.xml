@@ -30,4 +30,9 @@
     <string name="cancel">Cancel</string>
     <string name="job_added">Congratulations. You are officially signed up!</string>
     <string name="signup_for_job">Sign up for this Opportunity</string>
+    <string name="user_rating">Rating</string>
+    <string name="currently_enrolled">Currently Participating In: </string>
+    <string name="previously_enrolled">Has Participated In: </string>
+    <string name="opportunities">opportunities</string>
+    <string name="age">Age:</string>
 </resources>

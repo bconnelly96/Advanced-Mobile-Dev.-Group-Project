@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 import edu.temple.mobiledevgroupproject.Objects.Job;
+import edu.temple.mobiledevgroupproject.Objects.Record;
 import edu.temple.mobiledevgroupproject.Objects.SimpleDate;
 import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.UI.FormFragment;
@@ -53,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
 
         //FOR TESTING
         thisUser = new User();
+        thisUser.setName("Brendan Connelly")
+                .setUserName("bconnelly96")
+                .setCurrentEnrolledJobs(new Record<Job>("name", Record.JOB_RECORD))
+                .setPreviousJobs(new Record<Job>("name2", Record.JOB_RECORD))
+                .setUserBirthDay(new SimpleDate(1996, 10,2))
+                .setUserRating(User.DEFAULT_RATING);
         //FOR TESTING
 
         //initialize layout objects
@@ -122,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
                 switch(menuItem.getItemId()) {
                     case R.id.nav_profile:
                         profileFragment = new ProfileFragment();
+                        Bundle args2 = new Bundle();
+                        args2.putParcelable("user_to_display", thisUser);
+                        profileFragment.setArguments(args2);
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, profileFragment).commit();
                         break;
                     case R.id.nav_postjob:
