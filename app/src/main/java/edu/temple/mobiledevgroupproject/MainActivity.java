@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
             thisUser = recIntent.getParcelableExtra("this_user");
         }
 
+        //FOR TESTING
+        thisUser = new User();
+        //FOR TESTING
+
         //initialize layout objects
         drawerLayout = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.app_bar);

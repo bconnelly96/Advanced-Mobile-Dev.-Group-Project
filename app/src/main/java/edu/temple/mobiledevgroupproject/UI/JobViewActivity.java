@@ -42,11 +42,8 @@ public class JobViewActivity extends AppCompatActivity {
 
         Intent recIntent = getIntent();
         if (recIntent != null) {
-            System.out.println("REC INTENT NOT NULL");
             jobToDisplay = (Job) recIntent.getParcelableExtra("this_job");
             thisUser = (User) recIntent.getParcelableExtra("this_user");
-            //jobToDisplay = (Job) recIntent.getSerializableExtra("this_job");
-            //thisUser = (User) recIntent.getSerializableExtra("this_user");
         }
 
         jobTitleView = findViewById(R.id.job_title_view);
@@ -74,7 +71,12 @@ public class JobViewActivity extends AppCompatActivity {
         });
     }
 
-    //get Address from Job's location field
+    /**
+     * Helper method.
+     * Use Geocoder to translate a LatLng coordinate object into a traditional address.
+     * @param latLng A LatLng object to be translated into an address String
+     * @return An address String based on the latLng param.
+     */
     private String getAddrFromLatLng(LatLng latLng) {
         String addressString = "";
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -94,7 +96,12 @@ public class JobViewActivity extends AppCompatActivity {
         return addressString;
     }
 
-    //return a string in the format: month/day/year
+    /**
+     * Helper method.
+     * Assemble a String of the format: "month/day/year"
+     * @param simpleDate A SimpleDate instance representing the date to be formatted.
+     * @return A formatted date string for display purposes.
+     */
     private String getDateString(SimpleDate simpleDate) {
         StringBuilder sb = new StringBuilder("");
         sb.append(String.valueOf(simpleDate.getMonth()));
@@ -105,7 +112,12 @@ public class JobViewActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    //launch the dialog for user confirmation of job application
+    /**
+     * Helper method.
+     * Presents user with a dialog confirming their selection of a given job.
+     * Upon a click of the dialog's 'confirm' button, user will be 'signed-up' for
+     * this job, and the Activity will close.
+     */
     private void launchDialog() {
         View mView = getLayoutInflater().inflate(R.layout.confirm_dialog, null);
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(this);
@@ -123,6 +135,9 @@ public class JobViewActivity extends AppCompatActivity {
                 thisUser.updatePreviousJobs(jobToDisplay);
                 dialog.dismiss();
                 Toast.makeText(JobViewActivity.this, getResources().getString(R.string.job_added), Toast.LENGTH_LONG).show();
+                jobToDisplay = null;
+                thisUser = null;
+                finish();
             }
         });
 
