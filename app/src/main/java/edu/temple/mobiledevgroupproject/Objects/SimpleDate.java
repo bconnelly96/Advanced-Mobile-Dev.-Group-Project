@@ -3,7 +3,9 @@ package edu.temple.mobiledevgroupproject.Objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SimpleDate {
+import java.io.Serializable;
+
+public class SimpleDate implements Serializable {
     private int year;
     private int month;
     private int day;

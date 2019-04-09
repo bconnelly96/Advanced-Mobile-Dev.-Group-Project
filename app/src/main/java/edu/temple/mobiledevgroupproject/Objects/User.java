@@ -128,14 +128,23 @@ public class User implements Parcelable {
     }*/
 
     public void updateCurrentEnrolledJobs(Job newJob) {
+        if (currentEnrolledJobs == null) {
+            currentEnrolledJobs = new Record<>("CURRENTLY_ENROLLED_JOBS", Record.JOB_RECORD);
+        }
         currentEnrolledJobs.addDataToRecord(newJob);
     }
 
     public void updateCurrentPostedJobs(Job newJob) {
+        if (currentPostedJobs == null) {
+            currentPostedJobs = new Record<>("CURRENT_POSTED_JOBS", Record.JOB_RECORD);
+        }
         currentPostedJobs.addDataToRecord(newJob);
     }
 
     public void updatePreviousJobs(Job newJob) {
+        if (previousJobs == null) {
+            previousJobs = new Record<>("PREVIOUS_JOBS", Record.JOB_RECORD);
+        }
         previousJobs.addDataToRecord(newJob);
     }
 

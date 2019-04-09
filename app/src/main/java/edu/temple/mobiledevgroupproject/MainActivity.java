@@ -66,17 +66,23 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
         job1.setJobTitle("Liacouras Job")
                 .setLocation(new LatLng(39.973862, -75.158852))
                 .setJobDescription("A very rewarding experience at the Liacouras center!")
-                .setDateOfJob(new SimpleDate(2019, 11, 1));
+                .setDateOfJob(new SimpleDate(2019, 11, 1))
+                .setDatePosted(new SimpleDate(2019, 4, 8))
+                .setUser(new User().setUserName("User 1"));
 
         job2.setJobTitle("Paley Job")
                 .setLocation(new LatLng(39.980942, -75.154465))
                 .setJobDescription("A very rewarding experience at the Paley Library. This is going to be a very long description to test what happens when the job's description is very long.")
-                .setDateOfJob(new SimpleDate(2019, 11, 3));
+                .setDateOfJob(new SimpleDate(2019, 11, 3))
+                .setDatePosted(new SimpleDate(2019, 4, 8))
+                .setUser(new User().setUserName("User 1"));
 
         job3.setJobTitle("City Hall Job")
                 .setLocation(new LatLng(39.953194, -75.163345))
                 .setJobDescription("City Hall JOB. ")
-                .setDateOfJob(new SimpleDate(1999, 2, 20));
+                .setDateOfJob(new SimpleDate(1999, 2, 20))
+                .setDatePosted(new SimpleDate(2019, 4, 8))
+                .setUser(new User().setUserName("User 1"));
 
         ArrayList<Job> testJobs = new ArrayList<>();
         testJobs.add(job1);
@@ -125,34 +131,44 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
                         job1.setJobTitle("Test 1")
                                 .setJobDescription("DEScription test1 this is a long description. tes test tes hello hello hello hello world test LOREM DEScription test1 this is a long description. tes test tes hello hello hello hello world test LOREM")
                                 .setUser(new User().setUserName("TEST USER 1"))
-                                .setDateOfJob(new SimpleDate(2019, 10, 2));
+                                .setDateOfJob(new SimpleDate(2019, 10, 2))
+                                .setDatePosted(new SimpleDate(2019, 4, 8));
 
                         job2.setJobTitle("Test 2")
                                 .setJobDescription("short desc.")
                                 .setUser(new User().setUserName("TEST USER 2"))
-                                .setDateOfJob(new SimpleDate(2019, 11, 22));
+                                .setDateOfJob(new SimpleDate(2019, 11, 22))
+                                .setDatePosted(new SimpleDate(2019, 4, 8));
 
                         job3.setJobTitle("Test 3")
                                 .setJobDescription("medium desc.")
                                 .setUser(new User().setUserName("TEST USER 3"))
-                                .setDateOfJob(new SimpleDate(2016, 4, 1));
+                                .setDateOfJob(new SimpleDate(2016, 4, 1))
+                                .setDatePosted(new SimpleDate(2019, 4, 8));
 
                         job4.setJobTitle("Test 4")
                                 .setJobDescription("Description Desc. Description.")
                                 .setUser(new User().setUserName("TEST USER 4"))
-                                .setDateOfJob(new SimpleDate(2019, 11, 2));
+                                .setDateOfJob(new SimpleDate(2019, 11, 2))
+                                .setDatePosted(new SimpleDate(2019, 4, 8));
+
                         job5.setJobTitle("This is a great new opportunity")
                                 .setJobDescription("a great opportunity is this description.")
                                 .setUser(new User().setUserName("happyuser8"))
-                                .setDateOfJob(new SimpleDate(2010, 1, 2));
+                                .setDateOfJob(new SimpleDate(2010, 1, 2))
+                                .setDatePosted(new SimpleDate(2019, 4, 8));
+
                         job6.setJobTitle("Another Great opportunity")
                                 .setJobDescription("Wow so great.")
                                 .setUser(new User().setUserName("TEST USER 4"))
-                                .setDateOfJob(new SimpleDate(2019, 9, 2));
+                                .setDateOfJob(new SimpleDate(2019, 9, 2))
+                                .setDatePosted(new SimpleDate(2019, 4, 8));
+
                         job7.setJobTitle("Another great job title.")
                                 .setJobDescription("wow yep a description.")
                                 .setUser(new User().setUserName("i_am_a_test_user"))
-                                .setDateOfJob(new SimpleDate(2019, 12, 2));
+                                .setDateOfJob(new SimpleDate(2019, 12, 2))
+                                .setDatePosted(new SimpleDate(2019, 4, 8));
 
                         testJobs.add(job1);
                         testJobs.add(job2);
@@ -203,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
     //implemented from JobListFragment.JobSelectedInterface
     @Override
     public void getSelectedJob(Job selectedJob) {
-        //launchJobViewActivity(selectedJob);
-        Toast.makeText(this, "Selected: " + selectedJob.getJobTitle(), Toast.LENGTH_SHORT).show();
+        launchJobViewActivity(selectedJob);
+        //Toast.makeText(this, "Selected: " + selectedJob.getJobTitle(), Toast.LENGTH_SHORT).show();
     }
 
     //implemented from MapFragment.MapClickInterface

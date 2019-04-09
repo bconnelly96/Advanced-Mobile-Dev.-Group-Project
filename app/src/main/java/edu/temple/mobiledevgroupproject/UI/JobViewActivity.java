@@ -42,8 +42,11 @@ public class JobViewActivity extends AppCompatActivity {
 
         Intent recIntent = getIntent();
         if (recIntent != null) {
-            jobToDisplay = (Job) recIntent.getSerializableExtra("this_job");
-            thisUser = (User) recIntent.getSerializableExtra("this_user");
+            System.out.println("REC INTENT NOT NULL");
+            jobToDisplay = (Job) recIntent.getParcelableExtra("this_job");
+            thisUser = (User) recIntent.getParcelableExtra("this_user");
+            //jobToDisplay = (Job) recIntent.getSerializableExtra("this_job");
+            //thisUser = (User) recIntent.getSerializableExtra("this_user");
         }
 
         jobTitleView = findViewById(R.id.job_title_view);

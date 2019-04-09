@@ -43,11 +43,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     MapClickInterface mapClickListener;
 
     public MapFragment() {
-
+        //required empty public constructor
     }
 
     public interface MapClickInterface {
-        public void jobSelected(Job selectedJob);
+        void jobSelected(Job selectedJob);
     }
 
     @Override
@@ -91,7 +91,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         configureMap(jobsToDisplay);
     }
 
-    //this method will be expanded when custom info window is implemented.
+    /**
+     * Launches a custom info window giving the user the option to view
+     * the job corresponding with the param. marker.
+     * @param marker The selected marker
+     * @return false
+     */
     @Override
     public boolean onMarkerClick(Marker marker) {
         Job selectedJob = null;
@@ -109,13 +114,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         return false;
     }
 
-    //called when fragment first created and upon userlist update
+    /**
+     * Sets markers on the fragment's mapview using the location fields of the
+     * Jobs in the jobsToDisplay param.
+     * Also sets a marker for the user's location.
+     * @param jobsToDisplay The list of Job objects to display on the mapview.
+     */
     public void configureMap(ArrayList<Job> jobsToDisplay) {
         MapsInitializer.initialize(getContext());
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setOnMarkerClickListener(this);
 
-        //TODO implement fetching of currrent position. Currently position is hardcoded.
+        //TODO implement fetching of currrent position in parent activity. Currently position is hardcoded.
         LatLng userPos = new LatLng(39.981991, -75.153053);
         CameraPosition camPos = CameraPosition.builder()
                 .target(userPos)

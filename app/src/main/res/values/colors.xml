@@ -5,12 +5,12 @@
     <color name="colorAccent">#FF4081</color>
 
 
-    <color name="primary">#e57373</color>
-    <color name="primaryLight">#ffa4a2</color>
-    <color name="primaryDark">#af4448</color>
-    <color name="secondary">#ef5350</color>
-    <color name="secondaryLight">#ff867c</color>
-    <color name="secondaryDark">#b61827</color>
-    <color name ="textOnPrimary">#000000</color>
-    <color name ="textOnSecondary">#f9f9f9</color>
+    <color name="primary">#00796b</color>
+    <color name="primaryLight">#48a999</color>
+    <color name="primaryDark">#004c40</color>
+    <color name="secondary">#81c784</color>
+    <color name="secondaryLight">#b2fab4</color>
+    <color name="secondaryDark">#519657</color>
+    <color name ="textOnPrimary">#fafafa</color>
+    <color name ="textOnSecondary">#000</color>
 </resources>

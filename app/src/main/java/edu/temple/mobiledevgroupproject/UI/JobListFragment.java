@@ -27,6 +27,7 @@ public class JobListFragment extends Fragment implements RecyclerViewItemClicked
     RecyclerView recyclerView;
     ListAdapter listAdapter;
 
+    //other objects
     private ArrayList<Job> jobList;
     public JobSelectedInterface jobSelectedListener;
 
@@ -61,13 +62,16 @@ public class JobListFragment extends Fragment implements RecyclerViewItemClicked
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-
         return view;
     }
-
-    //when user clicks list item, pass corresponding job to parent activity
+    
+    /**
+     * Passes job corresponding to list item clicked by user to parent activity.
+     * @param view
+     * @param position Position of item clicked in the dataset
+     */
     @Override
-    public void userItemClick(View v, int position) {
+    public void userItemClick(View view, int position) {
         jobSelectedListener.getSelectedJob(jobList.get(position));
     }
 }
