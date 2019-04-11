@@ -21,7 +21,8 @@
             android:layout_height="200dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:paddingTop="?attr/actionBarSize" />
 
         <FrameLayout
             android:id="@+id/content_frame"

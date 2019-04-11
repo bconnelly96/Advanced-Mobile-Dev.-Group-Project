@@ -28,7 +28,7 @@ import edu.temple.mobiledevgroupproject.UI.JobViewActivity;
 import edu.temple.mobiledevgroupproject.UI.MapFragment;
 import edu.temple.mobiledevgroupproject.UI.ProfileFragment;
 
-public class MainActivity extends AppCompatActivity implements JobListFragment.JobSelectedInterface, MapFragment.MapClickInterface {
+public class MainActivity extends AppCompatActivity implements JobListFragment.JobSelectedInterface, MapFragment.MapClickInterface, FormFragment.FormInterface {
     //layout objects
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
                 .setUserName("bconnelly96")
                 .setCurrentEnrolledJobs(new Record<Job>("name", Record.JOB_RECORD))
                 .setPreviousJobs(new Record<Job>("name2", Record.JOB_RECORD))
+                .setCurrentPostedJobs(new Record<Job>("name3", Record.JOB_RECORD))
                 .setUserBirthDay(new SimpleDate(1996, 10,2))
                 .setUserRating(User.DEFAULT_RATING);
         //FOR TESTING
@@ -136,6 +137,9 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
                         break;
                     case R.id.nav_postjob:
                         formFragment = new FormFragment();
+                        Bundle args3 = new Bundle();
+                        args3.putParcelable("this_user", thisUser);
+                        formFragment.setArguments(args3);
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, formFragment).commit();
                         break;
                     case R.id.nav_joblist:
@@ -234,14 +238,22 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
     @Override
     public void getSelectedJob(Job selectedJob) {
         launchJobViewActivity(selectedJob);
-        //Toast.makeText(this, "Selected: " + selectedJob.getJobTitle(), Toast.LENGTH_SHORT).show();
     }
 
     //implemented from MapFragment.MapClickInterface
     @Override
     public void jobSelected(Job selectedJob) {
         launchJobViewActivity(selectedJob);
-        //Toast.makeText(this, "Selected: " + selectedJob.getJobTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+    //implemented from FormFragment.FormInterface
+    @Override
+    public void getDataFromForm(Job jobData, User user) {
+        System.out.println("*******");
+        System.out.println(jobData.toJSONObject().toString());
+        System.out.println("*******");
+        //TODO refine implementation
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
     }
 
     //helper method

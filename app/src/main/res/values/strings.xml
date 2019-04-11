@@ -35,4 +35,15 @@
     <string name="previously_enrolled">Has Participated In: </string>
     <string name="opportunities">opportunities</string>
     <string name="age">Age:</string>
+    <string name="date">Date:</string>
+    <string name="job_title">Opportunity Title</string>
+    <string name="job_desc">Opportunity Description</string>
+    <string name="job_addr">Street</string>
+    <string name="job_city">City</string>
+    <string name="job_state">State</string>
+    <string name="job_zip">Zip Code</string>
+    <string name="select_date">Select the Date of the Opportunity from the Calendar.</string>
+    <string name="enter_addr">Enter the Address where the Opportunity will take place.</string>
+    <string name="job_created">Congratulations, your job was been successfully posted!</string>
+    <string name="invalid">One or more fields is empty or invalid. Please try again.</string>
 </resources>

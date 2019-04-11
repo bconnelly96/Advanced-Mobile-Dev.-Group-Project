@@ -3,19 +3,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/colorPrimaryDark">
 
     <ImageView
         android:id="@+id/nav_prof_img"
         android:layout_width="196dp"
         android:layout_height="184dp"
-        android:gravity="center_vertical|center_horizontal"
-        />
+        android:layout_gravity="center"
+        android:src="@drawable/icons8_user_24" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="DUMMY TEXT"
-        android:gravity="center_vertical|center_horizontal"/>
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/textOnPrimary"/>
 
 </LinearLayout>

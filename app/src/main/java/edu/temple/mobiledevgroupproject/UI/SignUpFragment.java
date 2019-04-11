@@ -125,10 +125,22 @@ public class SignUpFragment extends Fragment {
     }
 
     /**
-     * Get input from UI elements and query database to determine in signup info is unique
+     * Get input from UI elements and query database to determine in signup info is unique.
+     * Also check to ensure user birthday input from UI elements is valid.
      * @return true if signup info entered by user is unique
      */
     private boolean signUpInfoValid() {
+        int month = Integer.valueOf(monthField.getText().toString().trim());
+        int day = Integer.valueOf(dayField.getText().toString().trim());
+        int year = Integer.valueOf(yearField.getText().toString().trim());
+
+        if (!SimpleDate.isValidDate(month, day, year)) {
+            return false;
+        }
+
+
         return false;
     }
+
+    //TODO CHECK FOR INVALID BIRTHDATE
 }
