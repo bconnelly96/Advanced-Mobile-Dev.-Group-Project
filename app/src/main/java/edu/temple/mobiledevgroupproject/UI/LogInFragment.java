@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.temple.mobiledevgroupproject.Objects.User;
@@ -26,6 +27,7 @@ public class LogInFragment extends Fragment {
     EditText passwordField;
     Button confirmButton;
     CheckBox rememberMeBox;
+    TextView newTextView;
 
     LogInInterface logInListener;
     View view;
@@ -36,6 +38,7 @@ public class LogInFragment extends Fragment {
 
     public interface LogInInterface {
         void sendExistingUser(User existingUser, boolean saveData);
+        void signUpClick();
     }
 
     @Override
@@ -60,11 +63,18 @@ public class LogInFragment extends Fragment {
         passwordField = view.findViewById(R.id.password_edit_text_log);
         confirmButton = view.findViewById(R.id.confirm_button_log);
         rememberMeBox = view.findViewById(R.id.checkbox_log);
+        newTextView = view.findViewById(R.id.new_text_view);
+
+        newTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logInListener.signUpClick();
+            }
+        });
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String userName = userNameField.getText().toString();
                 String password = passwordField.getText().toString();
                 if (allFieldsHaveInput() && logInInfoValid(userName, password)) {

@@ -14,9 +14,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,9 +36,8 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
     private static final String FILENAME = "saved_credentials";
 
     //layout objects
-    Button logInButton;
-    Button signUpButton;
     FrameLayout fragmentContainer;
+    TextView newTextView;
 
     User thisUser;
     String retrievedUserName = null;
@@ -46,34 +48,14 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        logInButton = findViewById(R.id.login_button);
-        signUpButton = findViewById(R.id.signup_button);
-        //fragmentContainer = findViewById(R.id.login_frag_container);
+
+        fragmentContainer = findViewById(R.id.login_frag_container);
 
         if (savedDataExists()) {
             startMainActivity(thisUser);
         } else {
-            logInButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LogInFragment logInFragment = new LogInFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.login_frag_container, logInFragment);
-                }
-            });
-
-            signUpButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    logInButton.setVisibility(View.INVISIBLE);
-                    signUpButton.setVisibility(View.INVISIBLE);
-                    fragmentContainer.setVisibility(View.VISIBLE);
-
-                    SignUpFragment signUpFragment = new SignUpFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.login_frag_container, signUpFragment);
-                }
-            });
+            LogInFragment logInFragment = new LogInFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.login_frag_container, logInFragment).commit();
         }
     }
 
@@ -104,6 +86,17 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
         }
         sendUserToDataBase(existingUser);
         startMainActivity(existingUser);
+    }
+
+    /**
+     * Triggered in child fragment, when user requests to create new account.
+     * Launches new fragment
+     */
+    @Override
+    public void signUpClick() {
+        SignUpFragment signUpFragment = new SignUpFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.login_frag_container, signUpFragment).commit();
+        //Toast.makeText(LogInActivity.this, "clicked", Toast.LENGTH_SHORT).show();
     }
 
     /**

@@ -46,4 +46,5 @@
     <string name="enter_addr">Enter the Address where the Opportunity will take place.</string>
     <string name="job_created">Congratulations, your job was been successfully posted!</string>
     <string name="invalid">One or more fields is empty or invalid. Please try again.</string>
+    <string name="new_to_help">New to help!? Click here to Sign Up!</string>
 </resources>

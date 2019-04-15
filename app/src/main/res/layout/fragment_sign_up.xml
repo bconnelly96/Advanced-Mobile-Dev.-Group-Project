@@ -60,14 +60,14 @@
 
     <EditText
         android:id="@+id/name_et_sign"
-        android:hint="@string/name_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="305dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:hint="@string/name_field"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/user_et_sign"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,24 +78,24 @@
 
     <EditText
         android:id="@+id/user_et_sign"
-        android:hint="@string/username"
-        android:layout_width="wrap_content"
+        android:layout_width="305dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:ems="10"
+        android:hint="@string/username"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/pass_et_sign"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/pass_et_sign"
-        android:layout_width="212dp"
+        android:layout_width="305dp"
         android:layout_height="46dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:ems="10"
@@ -103,12 +103,12 @@
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/confirm_sign"
-        android:layout_width="212dp"
+        android:layout_width="305dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
@@ -129,8 +129,8 @@
         android:text="@string/birthday"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tableLayout"
-        app:layout_constraintHorizontal_bias="0.578"
+        app:layout_constraintHorizontal_bias="0.64"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.748" />
+        app:layout_constraintVertical_bias="0.631" />
 </android.support.constraint.ConstraintLayout>
