@@ -20,6 +20,8 @@ public class Job implements Parcelable {
     private String jobDescription;
     private SimpleDate datePosted;
     private SimpleDate dateOfJob;
+    private SimpleTime startTime;
+    private SimpleTime endTime;
     private LatLng location;
     private User user;
     private Record<Comment> commentList;
@@ -45,6 +47,16 @@ public class Job implements Parcelable {
 
     public Job setDateOfJob(SimpleDate dateOfJob) {
         this.dateOfJob = dateOfJob;
+        return this;
+    }
+
+    public Job setStartTime(SimpleTime startTime) {
+        this.startTime = startTime;
+        return this;
+    }
+
+    public Job setEndTime(SimpleTime endTime) {
+        this.endTime = endTime;
         return this;
     }
 
@@ -77,6 +89,14 @@ public class Job implements Parcelable {
 
     public SimpleDate getDateOfJob() {
         return dateOfJob;
+    }
+
+    public SimpleTime getStartTime() {
+        return startTime;
+    }
+
+    public SimpleTime getEndTime() {
+        return endTime;
     }
 
     public LatLng getLocation() {
@@ -112,6 +132,8 @@ public class Job implements Parcelable {
         jobDescription = in.readString();
         datePosted = (SimpleDate) in.readValue(SimpleDate.class.getClassLoader());
         dateOfJob = (SimpleDate) in.readValue(SimpleDate.class.getClassLoader());
+        startTime = (SimpleTime) in.readValue(SimpleTime.class.getClassLoader());
+        endTime = (SimpleTime) in.readValue(SimpleTime.class.getClassLoader());
         location = (LatLng) in.readValue(SimpleDate.class.getClassLoader());
         user = (User) in.readValue(User.class.getClassLoader());
         commentList = (Record<Comment>) in.readValue(Record.class.getClassLoader());
@@ -128,6 +150,8 @@ public class Job implements Parcelable {
         dest.writeString(jobDescription);
         dest.writeValue(datePosted);
         dest.writeValue(dateOfJob);
+        dest.writeValue(startTime);
+        dest.writeValue(endTime);
         dest.writeValue(location);
         dest.writeValue(user);
         dest.writeValue(commentList);

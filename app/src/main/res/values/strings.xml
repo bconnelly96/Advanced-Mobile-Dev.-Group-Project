@@ -47,4 +47,7 @@
     <string name="job_created">Congratulations, your job was been successfully posted!</string>
     <string name="invalid">One or more fields is empty or invalid. Please try again.</string>
     <string name="new_to_help">New to help!? Click here to Sign Up!</string>
+    <string name="pick_start">Start Time</string>
+    <string name="pick_end">End Time</string>
+    <string name="start_and_end">Select an estimated start and end time for the opportunity.</string>
 </resources>

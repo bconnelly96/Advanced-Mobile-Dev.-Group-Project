@@ -46,13 +46,13 @@ public class JobViewActivity extends AppCompatActivity {
             thisUser = (User) recIntent.getParcelableExtra("this_user");
         }
 
-        jobTitleView = findViewById(R.id.job_title_view);
+       /* jobTitleView = findViewById(R.id.job_title_view);
         jobDescView = findViewById(R.id.job_desc_view);
         jobDateView = findViewById(R.id.job_date_view);
         jobPostedView = findViewById(R.id.job_posted_view);
         jobLocView = findViewById(R.id.job_loc_view);
         jobUserView = findViewById(R.id.job_user_view);
-        confirmButton = findViewById(R.id.confirm_button_jv);
+        confirmButton = findViewById(R.id.confirm_button_jv);*/
 
         if (jobToDisplay != null) {
             jobTitleView.setText(jobToDisplay.getJobTitle());
