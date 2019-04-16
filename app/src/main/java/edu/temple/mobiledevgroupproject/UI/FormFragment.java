@@ -178,8 +178,13 @@ public class FormFragment extends Fragment {
                             .setUser(thisUser)
                             .setCommentList(commentList);
 
+                    System.out.println("******************************");
+                    System.out.println("******************************");
+                    System.out.println(newJob.toJSONObject().toString());
+                    System.out.println("******************************");
+                    System.out.println("******************************");
+
                     formInterfaceListener.getDataFromForm(newJob, thisUser);
-                    thisUser.updateCurrentPostedJobs(newJob);
                     String toastString = getResources().getString(R.string.job_created);
                     Toast.makeText(getContext(), toastString, Toast.LENGTH_SHORT).show();
                 } else {
@@ -228,11 +233,11 @@ public class FormFragment extends Fragment {
     private boolean timeFieldsValid() {
         if (startTime.getTimePeriod().equals(SimpleTime.POST_MERIDIEM) && endTime.getTimePeriod().equals(SimpleTime.ANTE_MERIDIEM)) {
             return false;
-        } else {
+        } else if (startTime.getTimePeriod().equals(endTime.getTimePeriod())) {
             if (startTime.getHours() > endTime.getHours()) {
                 return false;
             } else if (startTime.getHours() == endTime.getHours()) {
-                if (startTime.getMinutes() < endTime.getMinutes()) {
+                if (startTime.getMinutes() <= endTime.getMinutes()) {
                     return false;
                 }
             }

@@ -160,6 +160,7 @@ public class Job implements Parcelable {
     /**
      * Constructs a JSONObject based on a Job instance's fields.
      * FORMAT: {"title":<job title>,"desc":<job description>,"date":[<month>,<day>,<year>],"date_posted":[<month>,<day>,<year>],
+     * "start_time:[<hour>,<minute>,<time_period>], "end_time":[<hour>,<minute>,<time_period>],
      * "loc_data":[<latitude>,<longitude>],"user_id":<job's user's ID>, "record_id""<job's record's ID>}
      * @return a Job instance's fields in JSONObject format.
      */
@@ -180,6 +181,18 @@ public class Job implements Parcelable {
             dateArray2.put(datePosted.getDay());
             dateArray2.put(datePosted.getYear());
             jsonObject.put("date_posted", dateArray2);
+
+            JSONArray startArray = new JSONArray();
+            startArray.put(startTime.getHours());
+            startArray.put(startTime.getMinutes());
+            startArray.put(startTime.getTimePeriod());
+            jsonObject.put("start_time", startArray);
+
+            JSONArray endArray = new JSONArray();
+            endArray.put(endTime.getHours());
+            endArray.put(endTime.getMinutes());
+            endArray.put(endTime.getTimePeriod());
+            jsonObject.put("end_time", endArray);
 
             JSONArray locArray = new JSONArray();
             locArray.put(location.latitude);
