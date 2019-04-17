@@ -7,9 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Record<T> {
+public class Record<T> implements Serializable {
     public static final String COMMENT_RECORD = "comment_record";
     public static final String JOB_RECORD = "job_record";
 

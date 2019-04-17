@@ -3,7 +3,9 @@ package edu.temple.mobiledevgroupproject.Objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SimpleTime {
+import java.io.Serializable;
+
+public class SimpleTime implements Serializable {
     public static String ANTE_MERIDIEM = "AM";
     public static String POST_MERIDIEM = "PM";
 

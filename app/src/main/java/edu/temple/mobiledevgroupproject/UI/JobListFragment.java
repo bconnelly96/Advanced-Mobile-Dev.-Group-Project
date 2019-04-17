@@ -14,9 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 
 import edu.temple.mobiledevgroupproject.Objects.Job;
@@ -43,6 +40,12 @@ public class JobListFragment extends Fragment implements RecyclerViewItemClicked
     public void onAttach(Context context) {
         super.onAttach(context);
         jobSelectedListener = (JobSelectedInterface) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        jobSelectedListener = null;
     }
 
     @Override

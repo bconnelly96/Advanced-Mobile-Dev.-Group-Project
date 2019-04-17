@@ -12,15 +12,16 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
+import edu.temple.mobiledevgroupproject.Objects.Comment;
 import edu.temple.mobiledevgroupproject.Objects.Job;
 import edu.temple.mobiledevgroupproject.Objects.Record;
 import edu.temple.mobiledevgroupproject.Objects.SimpleDate;
+import edu.temple.mobiledevgroupproject.Objects.SimpleTime;
 import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.UI.FormFragment;
 import edu.temple.mobiledevgroupproject.UI.JobListFragment;
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
     private JobListFragment jobListFragment;
     private MapFragment mapFragment;
     //Data objects
-    ArrayList<User> userList;
     User thisUser;
 
     @Override
@@ -49,19 +49,47 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
 
         Intent recIntent = getIntent();
         if (recIntent != null) {
-            thisUser = recIntent.getParcelableExtra("this_user");
+            //thisUser = recIntent.getParcelableExtra("this_user");
         }
 
-        //FOR TESTING
+        //testing***********************
         thisUser = new User();
         thisUser.setName("Brendan Connelly")
                 .setUserName("bconnelly96")
-                .setCurrentEnrolledJobs(new Record<Job>("name", Record.JOB_RECORD))
-                .setPreviousJobs(new Record<Job>("name2", Record.JOB_RECORD))
-                .setCurrentPostedJobs(new Record<Job>("name3", Record.JOB_RECORD))
-                .setUserBirthDay(new SimpleDate(1996, 10,2))
+                .setPassword("password123")
+                .setUserBirthDay(new SimpleDate(10, 2, 1996))
+                .setPreviousJobs(new Record<Job>("bconnelly_prev_jobs", Record.JOB_RECORD))
+                .setCurrentEnrolledJobs(new Record<Job>("bconnelly_current_enrolled", Record.JOB_RECORD))
+                .setCurrentPostedJobs(new Record<Job>("bconnelly_currently_posted", Record.JOB_RECORD))
                 .setUserRating(User.DEFAULT_RATING);
-        //FOR TESTING
+
+        Job job1 = new Job(), job2 = new Job();
+        job1.setJobTitle("Job 1: A great new job")
+                .setJobDescription("This is such a good job.")
+                .setDatePosted(new SimpleDate(10, 4, 2018))
+                .setDateOfJob(new SimpleDate (10, 6, 2018))
+                .setStartTime(new SimpleTime(10, 0, SimpleTime.ANTE_MERIDIEM))
+                .setEndTime(new SimpleTime(2, 30, SimpleTime.POST_MERIDIEM))
+                .setLocation(new LatLng(39.973862,  -75.158852))
+                .setUser(thisUser)
+                .setCommentList(new Record<Comment>("bconnelly_comment_list", Record.COMMENT_RECORD));
+
+        job2.setJobTitle("Job 2: Anoter great new job")
+                .setJobDescription("This is such a good job. Better than the first.")
+                .setDatePosted(new SimpleDate(10, 4, 2018))
+                .setDateOfJob(new SimpleDate(10, 6, 2018))
+                .setStartTime(new SimpleTime(10, 0, SimpleTime.ANTE_MERIDIEM))
+                .setEndTime(new SimpleTime(2, 30, SimpleTime.POST_MERIDIEM))
+                .setLocation(new LatLng(39.953194, -75.163345))
+                .setUser(thisUser)
+                .setCommentList(new Record<Comment>("bconnelly_comment_list", Record.COMMENT_RECORD));
+
+        final ArrayList<Job> jobsList = new ArrayList<>();
+        jobsList.add(job1);
+        jobsList.add(job2);
+
+        final Bundle jobsBundle = new Bundle();
+        jobsBundle.putSerializable("jobs_to_display", jobsList);
 
         //initialize layout objects
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -73,50 +101,9 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        //TEST MAP
-        Job job1 = new Job(), job2 = new Job(), job3 = new Job();
-        job1.setJobTitle("Liacouras Job")
-                .setLocation(new LatLng(39.973862, -75.158852))
-                .setJobDescription("A very rewarding experience at the Liacouras center!")
-                .setDateOfJob(new SimpleDate(2019, 11, 1))
-                .setDatePosted(new SimpleDate(2019, 4, 8))
-                .setUser(new User().setUserName("User 1"));
-
-        job2.setJobTitle("Paley Job")
-                .setLocation(new LatLng(39.980942, -75.154465))
-                .setJobDescription("A very rewarding experience at the Paley Library. This is going to be a very long description to test what happens when the job's description is very long.")
-                .setDateOfJob(new SimpleDate(2019, 11, 3))
-                .setDatePosted(new SimpleDate(2019, 4, 8))
-                .setUser(new User().setUserName("User 1"));
-
-        job3.setJobTitle("City Hall Job")
-                .setLocation(new LatLng(39.953194, -75.163345))
-                .setJobDescription("City Hall JOB. ")
-                .setDateOfJob(new SimpleDate(1999, 2, 20))
-                .setDatePosted(new SimpleDate(2019, 4, 8))
-                .setUser(new User().setUserName("User 1"));
-
-        ArrayList<Job> testJobs = new ArrayList<>();
-        testJobs.add(job1);
-        testJobs.add(job2);
-        testJobs.add(job3);
-
-        final Bundle mapTestBundle = new Bundle();
-        mapTestBundle.putSerializable("jobs_to_display", testJobs);
-        //TEST MAP
-
-
-
-
-
-
-
-
         fragmentManager = getSupportFragmentManager();
         mapFragment = new MapFragment();
-
-        mapFragment.setArguments(mapTestBundle);
-
+        mapFragment.setArguments(jobsBundle);
         fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
 
         //listen for nav. item selected events
@@ -143,68 +130,15 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, formFragment).commit();
                         break;
                     case R.id.nav_joblist:
-                        ArrayList<Job> testJobs = new ArrayList<>();
-                        Job job1 = new Job(), job2 = new Job(), job3 = new Job(), job4 = new Job(), job5 = new Job(), job6 = new Job(), job7 = new Job();
-
-                        job1.setJobTitle("Test 1")
-                                .setJobDescription("DEScription test1 this is a long description. tes test tes hello hello hello hello world test LOREM DEScription test1 this is a long description. tes test tes hello hello hello hello world test LOREM")
-                                .setUser(new User().setUserName("TEST USER 1"))
-                                .setDateOfJob(new SimpleDate(2019, 10, 2))
-                                .setDatePosted(new SimpleDate(2019, 4, 8));
-
-                        job2.setJobTitle("Test 2")
-                                .setJobDescription("short desc.")
-                                .setUser(new User().setUserName("TEST USER 2"))
-                                .setDateOfJob(new SimpleDate(2019, 11, 22))
-                                .setDatePosted(new SimpleDate(2019, 4, 8));
-
-                        job3.setJobTitle("Test 3")
-                                .setJobDescription("medium desc.")
-                                .setUser(new User().setUserName("TEST USER 3"))
-                                .setDateOfJob(new SimpleDate(2016, 4, 1))
-                                .setDatePosted(new SimpleDate(2019, 4, 8));
-
-                        job4.setJobTitle("Test 4")
-                                .setJobDescription("Description Desc. Description.")
-                                .setUser(new User().setUserName("TEST USER 4"))
-                                .setDateOfJob(new SimpleDate(2019, 11, 2))
-                                .setDatePosted(new SimpleDate(2019, 4, 8));
-
-                        job5.setJobTitle("This is a great new opportunity")
-                                .setJobDescription("a great opportunity is this description.")
-                                .setUser(new User().setUserName("happyuser8"))
-                                .setDateOfJob(new SimpleDate(2010, 1, 2))
-                                .setDatePosted(new SimpleDate(2019, 4, 8));
-
-                        job6.setJobTitle("Another Great opportunity")
-                                .setJobDescription("Wow so great.")
-                                .setUser(new User().setUserName("TEST USER 4"))
-                                .setDateOfJob(new SimpleDate(2019, 9, 2))
-                                .setDatePosted(new SimpleDate(2019, 4, 8));
-
-                        job7.setJobTitle("Another great job title.")
-                                .setJobDescription("wow yep a description.")
-                                .setUser(new User().setUserName("i_am_a_test_user"))
-                                .setDateOfJob(new SimpleDate(2019, 12, 2))
-                                .setDatePosted(new SimpleDate(2019, 4, 8));
-
-                        testJobs.add(job1);
-                        testJobs.add(job2);
-                        testJobs.add(job3);
-                        testJobs.add(job4);
-                        testJobs.add(job5);
-                        testJobs.add(job6);
-                        testJobs.add(job7);
-
                         Bundle args = new Bundle();
-                        args.putSerializable("job_list", testJobs);
+                        args.putSerializable("job_list", jobsList);
                         jobListFragment = new JobListFragment();
                         jobListFragment.setArguments(args);
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, jobListFragment).commit();
                         break;
                     case R.id.nav_map:
                         mapFragment = new MapFragment();
-                        mapFragment.setArguments(mapTestBundle);
+                        mapFragment.setArguments(jobsBundle);
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
                         break;
                 }

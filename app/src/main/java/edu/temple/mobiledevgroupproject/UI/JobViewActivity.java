@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,21 +17,27 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.List;
 import java.util.Locale;
 
+import edu.temple.mobiledevgroupproject.Objects.Comment;
 import edu.temple.mobiledevgroupproject.Objects.Job;
+import edu.temple.mobiledevgroupproject.Objects.Record;
 import edu.temple.mobiledevgroupproject.Objects.SimpleDate;
+import edu.temple.mobiledevgroupproject.Objects.SimpleTime;
 import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.R;
 
-public class JobViewActivity extends AppCompatActivity {
-    //layout objects
+public class JobViewActivity extends AppCompatActivity implements CommentFragment.CommentPostedInterface {
+    ///layout objects
     TextView jobTitleView;
     TextView jobDescView;
     TextView jobDateView;
     TextView jobPostedView;
+    TextView startTimeView;
+    TextView endTimeView;
     TextView jobLocView;
     TextView jobUserView;
+    TextView viewComments;
     Button confirmButton;
-    //TODO: add UI elements to support commenting.
+    FrameLayout container;
 
     Job jobToDisplay;
     User thisUser;
@@ -46,19 +53,44 @@ public class JobViewActivity extends AppCompatActivity {
             thisUser = (User) recIntent.getParcelableExtra("this_user");
         }
 
-       /* jobTitleView = findViewById(R.id.job_title_view);
+        thisUser = new User()
+        .setUserName("JerryGarcia1995");
+
+        jobToDisplay = new Job();
+        jobToDisplay.setJobTitle("New Opportunity. Please come help me!!!")
+                .setJobDescription("This is going to be such a good job. I need you guys to come help me.")
+                .setDatePosted(new SimpleDate(10,2,2018))
+                .setDateOfJob(new SimpleDate(10, 16, 2018))
+                .setStartTime(new SimpleTime(2, 30, SimpleTime.POST_MERIDIEM))
+                .setEndTime(new SimpleTime(4, 45, SimpleTime.POST_MERIDIEM))
+                .setLocation(new LatLng(41.044089, -75.301557))
+                .setUser(thisUser)
+                .setCommentList(new Record<Comment>("comment record", Record.COMMENT_RECORD));
+
+        jobTitleView = findViewById(R.id.job_title_view);
         jobDescView = findViewById(R.id.job_desc_view);
         jobDateView = findViewById(R.id.job_date_view);
         jobPostedView = findViewById(R.id.job_posted_view);
+        startTimeView = findViewById(R.id.job_start_view);
+        endTimeView = findViewById(R.id.job_end_view);
         jobLocView = findViewById(R.id.job_loc_view);
         jobUserView = findViewById(R.id.job_user_view);
-        confirmButton = findViewById(R.id.confirm_button_jv);*/
+        viewComments = findViewById(R.id.see_comment_view);
+        confirmButton = findViewById(R.id.confirm_button_jv);
 
         if (jobToDisplay != null) {
             jobTitleView.setText(jobToDisplay.getJobTitle());
             jobDescView.setText(jobToDisplay.getJobDescription());
             jobDateView.setText(getDateString(jobToDisplay.getDateOfJob()));
             jobPostedView.setText(getDateString(jobToDisplay.getDatePosted()));
+            String startHours = String.valueOf(jobToDisplay.getStartTime().getHours());
+            String startMins = String.valueOf(jobToDisplay.getStartTime().getMinutes());
+            String startPeriod = jobToDisplay.getStartTime().getTimePeriod();
+            startTimeView.setText(startHours + ":" + startMins + " " + startPeriod);
+            String endHours = String.valueOf(jobToDisplay.getEndTime().getHours());
+            String endMins = String.valueOf(jobToDisplay.getEndTime().getMinutes());
+            String endPeriod = jobToDisplay.getEndTime().getTimePeriod();
+            endTimeView.setText(endHours + ":" + endMins + " " + endPeriod);
             jobLocView.setText(getAddrFromLatLng(jobToDisplay.getLocation()));
             jobUserView.setText(jobToDisplay.getUser().getUserName());
         }
@@ -67,6 +99,32 @@ public class JobViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 launchDialog();
+            }
+        });
+
+        Comment testComment = new Comment("this is an example of a comment. This is the first example", thisUser, new SimpleDate(10, 2, 2015));
+        Comment testComment2 = new Comment("this is an example of a comment. This is the second example", thisUser, new SimpleDate(10, 4, 2015));
+        Comment testComment3 = new Comment("third example", thisUser, new SimpleDate(10, 4, 2017));
+        Comment testComment4 = new Comment("this is an example of a comment. This is the fourth example", thisUser, new SimpleDate(10, 4, 2017));
+        Comment testComment5 = new Comment("this is an example of a comment. This is the fifth example. I could take all day about this job. blah blah blah blah blah blah blah blah", thisUser, new SimpleDate(10, 4, 2017));
+
+        jobToDisplay.updateCommentList(testComment);
+        jobToDisplay.updateCommentList(testComment2);
+        jobToDisplay.updateCommentList(testComment3);
+        jobToDisplay.updateCommentList(testComment4);
+        jobToDisplay.updateCommentList(testComment5);
+
+        viewComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommentFragment commentFragment = new CommentFragment();
+                Bundle args = new Bundle();
+                args.putParcelable("this_job", jobToDisplay);
+                args.putParcelable("this_user", thisUser);
+                commentFragment.setArguments(args);
+                container = findViewById(R.id.frag_container);
+                container.setVisibility(View.VISIBLE);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frag_container, commentFragment).addToBackStack(null).commit();
             }
         });
     }
@@ -147,5 +205,25 @@ public class JobViewActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+
+    /**
+     * Implemented from CommentFragment.CommentPostedInterface
+     * Add comment to this Job instance's commentList Record field.
+     * @param comment The newly posted comment to be added.
+     */
+    @Override
+    public void getPostedComment(Comment comment) {
+        //TODO implement
+        jobToDisplay.updateCommentList(comment);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (container != null) {
+            container.setVisibility(View.GONE);
+        }
     }
 }
