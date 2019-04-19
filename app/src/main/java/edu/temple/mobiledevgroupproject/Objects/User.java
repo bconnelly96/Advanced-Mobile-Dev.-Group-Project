@@ -4,6 +4,8 @@
 
 package edu.temple.mobiledevgroupproject.Objects;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,6 +14,7 @@ import android.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -81,10 +84,10 @@ public class User implements Parcelable {
         return this;
     }
 
-    /*public User setprofileImage(Drawable profileImage) {
-        this.profileImage = encodeToString(profileImage);
+    public User setprofileImage(Bitmap bitmap) {
+        this.profileImage = encodeToString(bitmap);
         return this;
-    }*/
+    }
 
     public String getName() {
         return name;
@@ -123,9 +126,9 @@ public class User implements Parcelable {
     }
 
     //return the Drawable form of user's profile image
-   /* public Drawable getDecodedProfileImg() {
-        return decodeToDrawable(profileImage);
-    }*/
+    public Bitmap getDecodedProfileImage() {
+        return decodeToBitmap(profileImage);
+    }
 
     public void updateCurrentEnrolledJobs(Job newJob) {
         if (currentEnrolledJobs == null) {
@@ -207,16 +210,31 @@ public class User implements Parcelable {
         dest.writeString(profileImage);
     }
 
-    //encode user's profile image to a Base 64 String
-    /*private String encodeToString(Drawable profileImage) {
-
+    /**
+     * Helper method.
+     * translate Base64 String representation of a user's profile image into a Bitmap.
+     * @param profileImage Base64 String
+     * @return a Bitmap representing a user's profile image.
+     */
+    private Bitmap decodeToBitmap(String profileImage) {
+        byte [] data = Base64.decode(profileImage, Base64.DEFAULT);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inMutable = true;
+        return BitmapFactory.decodeByteArray(data, 0, data.length, options);
     }
 
-    //decode a user's profile image to Drawable
-    private Drawable decodeToDrawable(String profileImageString) {
-
-    }*/
-
+    /**
+     * Helper method.
+     *
+     * @param profileImage
+     * @return a Base64 representation of a user's Bitmap profile image.
+     */
+    private String encodeToString(Bitmap profileImage) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        profileImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
+        byte [] data = os.toByteArray();
+        return Base64.encodeToString(data, Base64.DEFAULT);
+    }
 
     /**
      * Constructs a JSONObject based on a User instance's fields.
