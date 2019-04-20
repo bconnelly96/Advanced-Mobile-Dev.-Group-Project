@@ -14,8 +14,15 @@ import android.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.FileNameMap;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -28,6 +35,7 @@ public class User implements Parcelable {
     public static final double DEFAULT_RATING = 3.0;
     public static final double MIN_RATING = 0.0;
     public static final double MAX_RATING = 5.0;
+    public static final String FILENAME = "prof_img";
 
     private String name;
     private String userName;
@@ -37,8 +45,6 @@ public class User implements Parcelable {
     private Record<Job> currentEnrolledJobs;
     private Record<Job> currentPostedJobs;
     private double userRating;
-    //bitmap image encoded to Base 64 String.
-    private String profileImage;
 
     public User() {
 
@@ -84,11 +90,6 @@ public class User implements Parcelable {
         return this;
     }
 
-    public User setprofileImage(Bitmap bitmap) {
-        this.profileImage = encodeToString(bitmap);
-        return this;
-    }
-
     public String getName() {
         return name;
     }
@@ -119,15 +120,6 @@ public class User implements Parcelable {
 
     public double getUserRating() {
         return userRating;
-    }
-
-    public String getProfileImage() {
-        return profileImage;
-    }
-
-    //return the Drawable form of user's profile image
-    public Bitmap getDecodedProfileImage() {
-        return decodeToBitmap(profileImage);
     }
 
     public void updateCurrentEnrolledJobs(Job newJob) {
@@ -189,7 +181,6 @@ public class User implements Parcelable {
         currentEnrolledJobs = (Record<Job>) in.readValue(Record.class.getClassLoader());
         currentPostedJobs = (Record<Job>) in.readValue(Record.class.getClassLoader());
         userRating = in.readDouble();
-        profileImage = in.readString();
     }
 
     @Override
@@ -207,7 +198,6 @@ public class User implements Parcelable {
         dest.writeValue(currentEnrolledJobs);
         dest.writeValue(currentPostedJobs);
         dest.writeDouble(userRating);
-        dest.writeString(profileImage);
     }
 
     /**
@@ -216,7 +206,7 @@ public class User implements Parcelable {
      * @param profileImage Base64 String
      * @return a Bitmap representing a user's profile image.
      */
-    private Bitmap decodeToBitmap(String profileImage) {
+    public static Bitmap decodeToBitmap(String profileImage) {
         byte [] data = Base64.decode(profileImage, Base64.DEFAULT);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
@@ -229,11 +219,57 @@ public class User implements Parcelable {
      * @param profileImage
      * @return a Base64 representation of a user's Bitmap profile image.
      */
-    private String encodeToString(Bitmap profileImage) {
+    public static String encodeToString(Bitmap profileImage) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         profileImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
         byte [] data = os.toByteArray();
         return Base64.encodeToString(data, Base64.DEFAULT);
+    }
+
+    /**
+     * Helper method.
+     * Read user profile image String from file.
+     * @param filePath
+     * @return Base64 String representing a user's profile image.
+     */
+    public static String fetchProfImg(File filePath) {
+        String profImg = null;
+        File file = new File(filePath, FILENAME);
+        if (file.exists()) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                StringBuilder sb = new StringBuilder();
+                String currLine;
+                while ((currLine = br.readLine()) != null) {
+                    sb.append(currLine);
+                }
+                br.close();
+                profImg = sb.toString();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return profImg;
+    }
+
+    /**
+     * Helper method.
+     * Write user profile image to storage.
+     * @param profImg Base64 encoded profile image to be saved.
+     * @param filePath Path to the save file in internal storage.
+     */
+    public static void writeProfImg(String profImg, File filePath) {
+        try {
+            FileOutputStream fos = new FileOutputStream(new File(filePath, FILENAME));
+            fos.write(profImg.getBytes());
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

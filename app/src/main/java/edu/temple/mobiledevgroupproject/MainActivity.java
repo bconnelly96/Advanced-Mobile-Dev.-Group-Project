@@ -1,6 +1,9 @@
 package edu.temple.mobiledevgroupproject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -12,9 +15,18 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import edu.temple.mobiledevgroupproject.Objects.Comment;
@@ -33,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
     //layout objects
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+    private NavigationView navigationView;
+    private ImageView profImg;
     //fragment objects
     private FragmentManager fragmentManager;
     private ProfileFragment profileFragment;
@@ -49,28 +63,28 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
 
         Intent recIntent = getIntent();
         if (recIntent != null) {
-            //thisUser = recIntent.getParcelableExtra("this_user");
+            thisUser = recIntent.getParcelableExtra("this_user");
+        } else {
+            //testing***********************
+            thisUser = new User();
+            thisUser.setName("Brendan Connelly")
+                    .setUserName("bconnelly96")
+                    .setPassword("password123")
+                    .setUserBirthDay(new SimpleDate(10, 2, 1996))
+                    .setPreviousJobs(new Record<Job>("bconnelly_prev_jobs", Record.JOB_RECORD))
+                    .setCurrentEnrolledJobs(new Record<Job>("bconnelly_current_enrolled", Record.JOB_RECORD))
+                    .setCurrentPostedJobs(new Record<Job>("bconnelly_currently_posted", Record.JOB_RECORD))
+                    .setUserRating(User.DEFAULT_RATING);
         }
-
-        //testing***********************
-        thisUser = new User();
-        thisUser.setName("Brendan Connelly")
-                .setUserName("bconnelly96")
-                .setPassword("password123")
-                .setUserBirthDay(new SimpleDate(10, 2, 1996))
-                .setPreviousJobs(new Record<Job>("bconnelly_prev_jobs", Record.JOB_RECORD))
-                .setCurrentEnrolledJobs(new Record<Job>("bconnelly_current_enrolled", Record.JOB_RECORD))
-                .setCurrentPostedJobs(new Record<Job>("bconnelly_currently_posted", Record.JOB_RECORD))
-                .setUserRating(User.DEFAULT_RATING);
 
         Job job1 = new Job(), job2 = new Job();
         job1.setJobTitle("Job 1: A great new job")
                 .setJobDescription("This is such a good job.")
                 .setDatePosted(new SimpleDate(10, 4, 2018))
-                .setDateOfJob(new SimpleDate (10, 6, 2018))
+                .setDateOfJob(new SimpleDate(10, 6, 2018))
                 .setStartTime(new SimpleTime(10, 0, SimpleTime.ANTE_MERIDIEM))
                 .setEndTime(new SimpleTime(2, 30, SimpleTime.POST_MERIDIEM))
-                .setLocation(new LatLng(39.973862,  -75.158852))
+                .setLocation(new LatLng(39.973862, -75.158852))
                 .setUser(thisUser)
                 .setCommentList(new Record<Comment>("bconnelly_comment_list", Record.COMMENT_RECORD));
 
@@ -100,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        navigationView = findViewById(R.id.nav_view);
 
         fragmentManager = getSupportFragmentManager();
         mapFragment = new MapFragment();
@@ -107,45 +122,44 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
         fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
 
         //listen for nav. item selected events
-        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                menuItem.setChecked(true);
-                //launch different fragments depending on selected nav. menu item
-                switch(menuItem.getItemId()) {
-                    case R.id.nav_profile:
-                        profileFragment = new ProfileFragment();
-                        Bundle args2 = new Bundle();
-                        args2.putParcelable("user_to_display", thisUser);
-                        profileFragment.setArguments(args2);
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, profileFragment).commit();
-                        break;
-                    case R.id.nav_postjob:
-                        formFragment = new FormFragment();
-                        Bundle args3 = new Bundle();
-                        args3.putParcelable("this_user", thisUser);
-                        formFragment.setArguments(args3);
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, formFragment).commit();
-                        break;
-                    case R.id.nav_joblist:
-                        Bundle args = new Bundle();
-                        args.putSerializable("job_list", jobsList);
-                        jobListFragment = new JobListFragment();
-                        jobListFragment.setArguments(args);
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, jobListFragment).commit();
-                        break;
-                    case R.id.nav_map:
-                        mapFragment = new MapFragment();
-                        mapFragment.setArguments(jobsBundle);
-                        fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
-                        break;
-                }
-                drawerLayout.closeDrawers();
-                return true;
-            }
-        });
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        //launch different fragments depending on selected nav. menu item
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_profile:
+                                profileFragment = new ProfileFragment();
+                                Bundle args2 = new Bundle();
+                                args2.putParcelable("user_to_display", thisUser);
+                                profileFragment.setArguments(args2);
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, profileFragment).commit();
+                                break;
+                            case R.id.nav_postjob:
+                                formFragment = new FormFragment();
+                                Bundle args3 = new Bundle();
+                                args3.putParcelable("this_user", thisUser);
+                                formFragment.setArguments(args3);
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, formFragment).commit();
+                                break;
+                            case R.id.nav_joblist:
+                                Bundle args = new Bundle();
+                                args.putSerializable("job_list", jobsList);
+                                jobListFragment = new JobListFragment();
+                                jobListFragment.setArguments(args);
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, jobListFragment).commit();
+                                break;
+                            case R.id.nav_map:
+                                mapFragment = new MapFragment();
+                                mapFragment.setArguments(jobsBundle);
+                                fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
+                                break;
+                        }
+                        drawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -163,6 +177,25 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
                 return true;
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+
+                //set nav. header profile image and username
+                TextView headerUsername = navigationView.findViewById(R.id.nav_user);
+                headerUsername.setText("@" + thisUser.getUserName());
+
+                profImg = navigationView.findViewById(R.id.nav_prof_img);
+                profImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openGallery();
+                    }
+                });
+
+                String userProfImg;
+                if ((userProfImg = User.fetchProfImg(getFilesDir())) != null) {
+                    Bitmap bitmap = User.decodeToBitmap(userProfImg);
+                    profImg.setImageBitmap(bitmap);
+                }
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -191,10 +224,32 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
     }
 
     //helper method
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, 100);
+    }
+
+    //helper method
     private void launchJobViewActivity(Job selectedJob) {
         Intent jobViewIntent = new Intent(this, JobViewActivity.class);
         jobViewIntent.putExtra("this_job", selectedJob);
         jobViewIntent.putExtra("this_user", thisUser);
         startActivity(jobViewIntent);
+    }
+
+    //helper method
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 100) {
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                profImg.setImageBitmap(bitmap);
+                User.writeProfImg(User.encodeToString(bitmap), getFilesDir());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

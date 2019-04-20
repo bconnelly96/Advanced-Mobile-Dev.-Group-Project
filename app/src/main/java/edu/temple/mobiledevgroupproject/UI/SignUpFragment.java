@@ -7,18 +7,30 @@
 package edu.temple.mobiledevgroupproject.UI;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import edu.temple.mobiledevgroupproject.Objects.Job;
+import edu.temple.mobiledevgroupproject.Objects.Record;
 import edu.temple.mobiledevgroupproject.Objects.SimpleDate;
 import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.R;
+
+import static android.app.Activity.RESULT_OK;
 
 public class SignUpFragment extends Fragment {
     //layout objects
@@ -86,9 +98,9 @@ public class SignUpFragment extends Fragment {
                             .setUserName(userName)
                             .setPassword(hashedPassword)
                             .setUserBirthDay(new SimpleDate(year, month, day))
-                            .setPreviousJobs(null)
-                            .setCurrentEnrolledJobs(null)
-                            .setCurrentPostedJobs(null)
+                            .setPreviousJobs(new Record<Job>(userName + "_previousJobs", Record.JOB_RECORD))
+                            .setCurrentEnrolledJobs(new Record<Job>(userName + "_currentEnrolledJobs", Record.JOB_RECORD))
+                            .setCurrentPostedJobs(new Record<Job>(userName + "_currentPostedJobs", Record.JOB_RECORD))
                             .setUserRating(User.DEFAULT_RATING);
 
                     Toast.makeText(getContext(), R.string.signup_success, Toast.LENGTH_SHORT).show();
@@ -130,12 +142,10 @@ public class SignUpFragment extends Fragment {
         int year = Integer.valueOf(yearField.getText().toString().trim());
 
         if (!SimpleDate.isValidDate(month, day, year)) {
-            return false;
+            return true;
         }
+        //TODO check for invalid birthdate
 
-
-        return false;
+        return true;
     }
-
-    //TODO CHECK FOR INVALID BIRTHDATE
 }
