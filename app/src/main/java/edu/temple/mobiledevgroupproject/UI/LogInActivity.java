@@ -159,6 +159,7 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
     private void startMainActivity(User extraData) {
         launchIntent = new Intent(this, MainActivity.class);
         launchIntent.putExtra("this_user", extraData);
+        finish();
         startActivity(launchIntent);
     }
 

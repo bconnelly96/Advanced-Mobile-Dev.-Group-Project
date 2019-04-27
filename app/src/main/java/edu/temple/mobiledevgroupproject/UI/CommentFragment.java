@@ -105,7 +105,6 @@ public class CommentFragment extends Fragment implements RecyclerViewItemClicked
 
     @Override
     public void userItemClick(View v, int position) {
-        //TODO if time permits, implement a feature where comment replies are more obvious/better looking
         String selectedUserName = commentsList.get(position).getUser().getUserName();
         commentEditText.setText("@" + selectedUserName);
     }

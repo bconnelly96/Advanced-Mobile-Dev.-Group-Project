@@ -63,7 +63,7 @@ public class ProfileFragment extends Fragment {
             userNameView.setText(userToDisplay.getUserName());
             nameView.setText(userToDisplay.getName());
             String ageString = getResources().getString(R.string.age);
-            ageView.setText(ageString + " " + getAgeString(userToDisplay.getUserBirthDay()));
+            ageView.setText(ageString + " " + SimpleDate.getAgeString(userToDisplay.getUserBirthDay()));
             ratingView.setText(String.valueOf(userToDisplay.getUserRating()));
 
             String opportunityString = getResources().getString(R.string.opportunities);
@@ -90,29 +90,5 @@ public class ProfileFragment extends Fragment {
         return String.valueOf(currentEnrolledJobs.getRecordData().size());
     }
 
-    /**
-     * Helper method.
-     * Calculate a user's age based on the current date and the userBirthDay param.
-     * @param userBirthDay User instance's field representing their D.O.B.
-     * @return A string representing the user's age relative to the current date.
-     */
-    private String getAgeString(SimpleDate userBirthDay) {
-        Calendar cal = Calendar.getInstance();
-        int currDay = cal.get(Calendar.DAY_OF_MONTH);
-        int currMonth = cal.get(Calendar.MONTH);
-        int currYear = cal.get(Calendar.YEAR);
 
-        int yearDiff = currYear - userBirthDay.getYear();
-        int monthDiff = currMonth - userBirthDay.getMonth();
-
-        if (monthDiff < 0) {
-            yearDiff -= 1;
-        } else if (monthDiff == 0) {
-            int dayDiff = currDay - userBirthDay.getDay();
-            if (dayDiff < 0) {
-                yearDiff -= 1;
-            }
-        }
-        return String.valueOf(yearDiff);
-    }
 }

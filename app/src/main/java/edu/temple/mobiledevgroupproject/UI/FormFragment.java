@@ -119,7 +119,7 @@ public class FormFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         setTime(hourOfDay, minute, true);
-                        startButton.setText(formatTime(startTime));
+                        startButton.setText(SimpleTime.formatTime(startTime));
                     }
                 }, thisHour, thisMinute, false);
                 timePickerDialog.show();
@@ -133,7 +133,7 @@ public class FormFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         setTime(hourOfDay, minute, false);
-                        endButton.setText(formatTime(endTime));
+                        endButton.setText(SimpleTime.formatTime(endTime));
                     }
                 }, thisHour, thisMinute, false);
                 timePickerDialog.show();
@@ -158,7 +158,7 @@ public class FormFragment extends Fragment {
                 String jobState = stateView.getText().toString().trim();
                 String jobZipCode = zipCodeView.getText().toString().trim();
 
-                if (allFieldsHaveInput() && dateFieldsValid() && timeFieldsValid() && addrToLatLng(jobAddr, jobCity, jobState, jobZipCode) != null) {
+                if (allFieldsHaveInput() && dateFieldsValid() && SimpleTime.isValidTimeInterval(startTime, endTime) && addrToLatLng(jobAddr, jobCity, jobState, jobZipCode) != null) {
                     SimpleDate simpleDate = new SimpleDate(selectedMonth, selectedDay, selectedYear);
 
                     LatLng jobLoc = addrToLatLng(jobAddr, jobCity, jobState, jobZipCode);
@@ -228,25 +228,6 @@ public class FormFragment extends Fragment {
 
     /**
      * Helper Method.
-     * @return true if start time is less than end time
-     */
-    private boolean timeFieldsValid() {
-        if (startTime.getTimePeriod().equals(SimpleTime.POST_MERIDIEM) && endTime.getTimePeriod().equals(SimpleTime.ANTE_MERIDIEM)) {
-            return false;
-        } else if (startTime.getTimePeriod().equals(endTime.getTimePeriod())) {
-            if (startTime.getHours() > endTime.getHours()) {
-                return false;
-            } else if (startTime.getHours() == endTime.getHours()) {
-                if (startTime.getMinutes() <= endTime.getMinutes()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Helper Method.
      * Assemble a LatLng object from the address corresponding to the args.
      * @param jobAddr    Represents job's address, i.e. "123 elm street"
      * @param jobCity    Represents job's city, i.e. "Philadelphia"
@@ -305,23 +286,5 @@ public class FormFragment extends Fragment {
         } else {
             endTime = new SimpleTime(hour, minuteOfHour, period);
         }
-    }
-
-    /**
-     * Helper Method.
-     * @param time The time to be formatted.
-     * @return a formatted string representation of time. param.
-     */
-    private String formatTime(SimpleTime time) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(time.getHours());
-        sb.append(":");
-        if (time.getMinutes() < 10) {
-            sb.append("0");
-        }
-        sb.append(time.getMinutes());
-        sb.append(" ");
-        sb.append(time.getTimePeriod());
-        return sb.toString();
     }
 }

@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 public class SimpleDate implements Serializable {
     private int year;
@@ -62,7 +63,35 @@ public class SimpleDate implements Serializable {
         return true;
     }
 
+    /**
+     * Helper method.
+     * Calculate a user's age based on the current date and the userBirthDay param.
+     * @param userBirthDay User instance's field representing their D.O.B.
+     * @return A string representing the user's age relative to the current date. Null if the birthday is not a valid date or if param. is null.
+     */
+    public static String getAgeString(SimpleDate userBirthDay) {
+        Calendar cal = Calendar.getInstance();
+        int currDay = cal.get(Calendar.DAY_OF_MONTH);
+        int currMonth = cal.get(Calendar.MONTH);
+        int currYear = cal.get(Calendar.YEAR);
 
+        int yearDiff;
+        if (userBirthDay != null && isValidDate(userBirthDay.getMonth(), userBirthDay.getDay(), userBirthDay.getYear())) {
+            yearDiff = currYear - userBirthDay.getYear();
+            int monthDiff = currMonth - userBirthDay.getMonth();
+
+            if (monthDiff < 0) {
+                yearDiff -= 1;
+            } else if (monthDiff == 0) {
+                int dayDiff = currDay - userBirthDay.getDay();
+                if (dayDiff < 0) {
+                    yearDiff -= 1;
+                }
+            }
+            return String.valueOf(yearDiff);
+        }
+        return null;
+    }
 
     /**
      * Constructs a JSONObject based on a SimpleDate instance's fields.

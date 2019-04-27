@@ -44,6 +44,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     //other objects
     ArrayList<Job> jobsToDisplay;
     MapClickInterface mapClickListener;
+    LatLng userPosition;
 
     public MapFragment() {
         //required empty public constructor
@@ -67,6 +68,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         Bundle args = getArguments();
         if (args != null) {
             jobsToDisplay = (ArrayList<Job>) args.getSerializable("jobs_to_display");
+            userPosition = args.getParcelable("USER_POSITION");
+        } else {
+            jobsToDisplay = new ArrayList<>();
         }
         return mView;
     }
@@ -133,21 +137,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setOnMarkerClickListener(this);
 
-        //TODO implement fetching of currrent position in parent activity. Currently position is hardcoded.
-        LatLng userPos = new LatLng(39.981991, -75.153053);
-        CameraPosition camPos = CameraPosition.builder()
-                .target(userPos)
-                .zoom(15)
-                .bearing(0)
-                .build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
-        //add user pos. as marker
-        String iconName = getResources().getResourceName(R.drawable.icons8_user_24);
+        LatLng dummy = new LatLng(38.8977, -77.0365);
 
-        googleMap.addMarker(new MarkerOptions()
-                .position(userPos)
-                .title("USER POSITION")
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeIcons(iconName, 60, 60))));
+        CameraPosition camPos;
+        if (userPosition != null) {
+            camPos = CameraPosition.builder()
+                    .target(userPosition)
+                    .zoom(15)
+                    .bearing(0)
+                    .build();
+
+        } else {
+            camPos = CameraPosition.builder()
+                    .target(dummy)
+                    .zoom(15)
+                    .bearing(0)
+                    .build();
+        }
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+
+        String iconName;
+
+        //add user pos. as marker
+        if (userPosition != null) {
+            iconName = getResources().getResourceName(R.drawable.icons8_user_24);
+            googleMap.addMarker(new MarkerOptions()
+                    .position(userPosition)
+                    .title("Your Position")
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeIcons(iconName, 60, 60))));
+        } else {
+            iconName = getResources().getResourceName(R.drawable.icons8_user_24);
+            googleMap.addMarker(new MarkerOptions()
+                    .position(dummy)
+                    .title("Your Position")
+                    .icon(BitmapDescriptorFactory.fromBitmap(resizeIcons(iconName, 60, 60))));
+        }
 
         iconName = getResources().getResourceName(R.drawable.marker_icon);
 

@@ -55,6 +55,8 @@ public class JobListFragment extends Fragment implements RecyclerViewItemClicked
         Bundle args = getArguments();
         if (args != null) {
             jobList = (ArrayList<Job>) args.getSerializable("job_list");
+        } else {
+            jobList = new ArrayList<>();
         }
 
         recyclerView = view.findViewById(R.id.recycler_view);

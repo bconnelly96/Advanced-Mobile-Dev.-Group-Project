@@ -44,25 +44,47 @@ public class SimpleTime implements Serializable {
     }
 
     /**
-     * Helper Method.
-     * Checks if a date with the attributes passed in as args. is a valid date.
-     * @return True if the params. match a valid time.
+     * Helper method.
+     * Checks if startTime and endTime constitute a valid time interval within a given calendar day.
      */
-    public static boolean isValidTime(int hours, int minutes, String timePeriod) {
-        //check for simple invalidity first.
-        if (!timePeriod.equals(ANTE_MERIDIEM) || !timePeriod.equals(POST_MERIDIEM)) {
+    public static boolean isValidTimeInterval(SimpleTime startTime, SimpleTime endTime) {
+        if (startTime == null || endTime == null) {
             return false;
         }
-
-        if ((hours > 12 || hours < 1) || (minutes > 59 || minutes < 0)) {
+        else if (startTime.getTimePeriod().equals(SimpleTime.POST_MERIDIEM) && endTime.getTimePeriod().equals(SimpleTime.ANTE_MERIDIEM)) {
             return false;
+        } else if (startTime.getTimePeriod().equals(endTime.getTimePeriod())) {
+            if (startTime.getHours() > endTime.getHours()) {
+                return false;
+            } else if (startTime.getHours() == endTime.getHours()) {
+                if (startTime.getMinutes() <= endTime.getMinutes()) {
+                    return false;
+                }
+            }
         }
+        return true;
+    }
 
-
-
-        //TODO determine whether this class is needed. Implement this method if so.
-
-        return false;
+    /**
+     * Helper Method.
+     * @param time The time to be formatted.
+     * @return a formatted string representation of time. param.
+     */
+    public static String formatTime(SimpleTime time) {
+        if (time != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(time.getHours());
+            sb.append(":");
+            if (time.getMinutes() < 10) {
+                sb.append("0");
+            }
+            sb.append(time.getMinutes());
+            sb.append(" ");
+            sb.append(time.getTimePeriod());
+            return sb.toString();
+        } else {
+            return null;
+        }
     }
 
     /**
