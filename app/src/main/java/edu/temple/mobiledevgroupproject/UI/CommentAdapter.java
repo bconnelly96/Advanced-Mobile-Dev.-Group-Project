@@ -35,7 +35,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(@NonNull CommentAdapter.ViewHolder viewHolder, int i) {
         Comment thisComment = commentList.get(viewHolder.getAdapterPosition());
 
-
         viewHolder.userTextView.setText(thisComment.getUser().getUserName());
         viewHolder.commentBodyTextView.setText(thisComment.getCommentText());
         String month = String.valueOf(thisComment.getDatePosted().getMonth());
@@ -43,6 +42,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         String year = String.valueOf(thisComment.getDatePosted().getYear());
         viewHolder.dateTextView.setText(month + "/" + day + "/" + year);
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -66,5 +67,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         public void onClick(View v) {
             itemClickedListener.userItemClick(v, this.getAdapterPosition());
         }
+    }
+
+    public void addComment(Comment newComment) {
+        commentList.add(newComment);
+        notifyItemInserted(commentList.size() - 1);
     }
 }

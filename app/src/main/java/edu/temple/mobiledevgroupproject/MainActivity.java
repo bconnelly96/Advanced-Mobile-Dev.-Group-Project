@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
     LocationManager locationManager;
     LocationListener locationListener;
 
+    ArrayList<Job> jobsToDisplay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
         if (recIntent != null) {
             thisUser = recIntent.getParcelableExtra("this_user");
         }
+
+        jobsToDisplay = new ArrayList<>();
 
         //initialize layout objects
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -113,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             return;
         } else {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
 
         //listen for nav. item selected events
         navigationView.setNavigationItemSelectedListener(
@@ -143,7 +147,10 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
                                 break;
                             case R.id.nav_joblist:
                                 fragmentManager = getSupportFragmentManager();
+                                Bundle jobBundle = new Bundle();
+                                jobBundle.putSerializable("job_list", jobsToDisplay);
                                 jobListFragment = new JobListFragment();
+                                jobListFragment.setArguments(jobBundle);
                                 fragmentManager.beginTransaction().replace(R.id.fragment_container, jobListFragment).commit();
                                 break;
                             case R.id.nav_map:
@@ -220,7 +227,9 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
      */
     @Override
     public void getDataFromForm(Job jobData, User user) {
-        //TODO update user's job lists
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
+        jobsToDisplay.add(jobData);
+        launchJobViewActivity(jobData);
     }
 
     /**
@@ -252,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
             }
         }
     }
@@ -292,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements JobListFragment.J
         mapFragment = new MapFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("USER_POSITION", userCurrentPosition);
+        bundle.putSerializable("jobs_to_display", jobsToDisplay);
         mapFragment.setArguments(bundle);
         fragmentManager.beginTransaction().replace(R.id.fragment_container, mapFragment).commit();
     }

@@ -88,7 +88,8 @@ public class CommentFragment extends Fragment implements RecyclerViewItemClicked
                     commentPostedListener.getPostedComment(newComment);
 
                     //update RecyclerView list of comments; notify adapter
-                    commentsList.add(newComment);
+                    //commentsList.add(newComment);
+                    //commentAdapter.addComment(newComment);
                     commentAdapter.notifyDataSetChanged();
 
                     toastString = getResources().getString(R.string.comment_posted);

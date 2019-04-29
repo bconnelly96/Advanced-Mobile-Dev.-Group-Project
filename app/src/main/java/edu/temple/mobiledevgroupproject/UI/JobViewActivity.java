@@ -53,20 +53,6 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
             thisUser = (User) recIntent.getParcelableExtra("this_user");
         }
 
-        /*thisUser = new User()
-        .setUserName("JerryGarcia1995");
-
-        jobToDisplay = new Job();
-        jobToDisplay.setJobTitle("New Opportunity. Please come help me!!!")
-                .setJobDescription("This is going to be such a good job. I need you guys to come help me.")
-                .setDatePosted(new SimpleDate(10,2,2018))
-                .setDateOfJob(new SimpleDate(10, 16, 2018))
-                .setStartTime(new SimpleTime(2, 30, SimpleTime.POST_MERIDIEM))
-                .setEndTime(new SimpleTime(4, 45, SimpleTime.POST_MERIDIEM))
-                .setLocation(new LatLng(41.044089, -75.301557))
-                .setUser(thisUser)
-                .setCommentList(new Record<Comment>("comment record", Record.COMMENT_RECORD));*/
-
         jobTitleView = findViewById(R.id.job_title_view);
         jobDescView = findViewById(R.id.job_desc_view);
         jobDateView = findViewById(R.id.job_date_view);
@@ -81,18 +67,18 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
         if (jobToDisplay != null) {
             jobTitleView.setText(jobToDisplay.getJobTitle());
             jobDescView.setText(jobToDisplay.getJobDescription());
-            jobDateView.setText(getDateString(jobToDisplay.getDateOfJob()));
-            jobPostedView.setText(getDateString(jobToDisplay.getDatePosted()));
+            jobDateView.setText("Date of Opportunity: " + getDateString(jobToDisplay.getDateOfJob()));
+            jobPostedView.setText("Date Posted: " + getDateString(jobToDisplay.getDatePosted()));
             String startHours = String.valueOf(jobToDisplay.getStartTime().getHours());
             String startMins = String.valueOf(jobToDisplay.getStartTime().getMinutes());
             String startPeriod = jobToDisplay.getStartTime().getTimePeriod();
-            startTimeView.setText(startHours + ":" + startMins + " " + startPeriod);
+            startTimeView.setText("Start Time: " + startHours + ":" + startMins + " " + startPeriod);
             String endHours = String.valueOf(jobToDisplay.getEndTime().getHours());
             String endMins = String.valueOf(jobToDisplay.getEndTime().getMinutes());
             String endPeriod = jobToDisplay.getEndTime().getTimePeriod();
-            endTimeView.setText(endHours + ":" + endMins + " " + endPeriod);
+            endTimeView.setText("End Time: " + endHours + ":" + endMins + " " + endPeriod);
             jobLocView.setText(getAddrFromLatLng(jobToDisplay.getLocation()));
-            jobUserView.setText(jobToDisplay.getUser().getUserName());
+            jobUserView.setText("Posted By: " + jobToDisplay.getUser().getUserName());
         }
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -101,18 +87,6 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
                 launchDialog();
             }
         });
-
-        Comment testComment = new Comment("this is an example of a comment. This is the first example", thisUser, new SimpleDate(10, 2, 2015));
-        Comment testComment2 = new Comment("this is an example of a comment. This is the second example", thisUser, new SimpleDate(10, 4, 2015));
-        Comment testComment3 = new Comment("third example", thisUser, new SimpleDate(10, 4, 2017));
-        Comment testComment4 = new Comment("this is an example of a comment. This is the fourth example", thisUser, new SimpleDate(10, 4, 2017));
-        Comment testComment5 = new Comment("this is an example of a comment. This is the fifth example. I could take all day about this job. blah blah blah blah blah blah blah blah", thisUser, new SimpleDate(10, 4, 2017));
-
-        jobToDisplay.updateCommentList(testComment);
-        jobToDisplay.updateCommentList(testComment2);
-        jobToDisplay.updateCommentList(testComment3);
-        jobToDisplay.updateCommentList(testComment4);
-        jobToDisplay.updateCommentList(testComment5);
 
         viewComments.setOnClickListener(new View.OnClickListener() {
             @Override
