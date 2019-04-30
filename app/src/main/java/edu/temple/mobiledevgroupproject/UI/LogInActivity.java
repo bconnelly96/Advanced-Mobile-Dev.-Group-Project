@@ -25,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import edu.temple.mobiledevgroupproject.MainActivity;
+import edu.temple.mobiledevgroupproject.Objects.SharedPrefManager;
 import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.R;
 
@@ -44,15 +45,14 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        if(SharedPrefManager.getInstance(this).isLoggedIn()){
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+        }
 
         fragmentContainer = findViewById(R.id.login_frag_container);
-
-        if (savedDataExists()) {
-            startMainActivity(thisUser);
-        } else {
-            LogInFragment logInFragment = new LogInFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.login_frag_container, logInFragment).commit();
-        }
+        LogInFragment logInFragment = new LogInFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.login_frag_container, logInFragment).commit();
     }
 
     /**
@@ -64,24 +64,7 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
      */
     @Override
     public void sendExistingUser(User existingUser, boolean saveData) {
-        //write to file
-        if (saveData) {
-            File file = new File(getFilesDir(), FILENAME);
-            JSONArray jsonArray = null;
-            jsonArray.put(existingUser.getUserName());
-            jsonArray.put(existingUser.getPassword());
-            try {
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                fileOutputStream.write(jsonArray.toString().getBytes());
-                fileOutputStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        sendUserToDataBase(existingUser);
-        startMainActivity(existingUser);
+        startMainActivity(null);
     }
 
     /**
@@ -104,44 +87,6 @@ public class LogInActivity extends AppCompatActivity implements LogInFragment.Lo
     public void sendNewUser(User newUser) {
         sendUserToDataBase(newUser);
         startMainActivity(newUser);
-    }
-
-    /**
-     * Checks device's internal storage for a username, password save file.
-     * If so, retrieves pair from file, queries database to retrieve User info matching pair in save file.
-     * @return true if a username, password pair in device's internal storage.
-     */
-    private boolean savedDataExists() {
-        File file = new File(getFilesDir(), FILENAME);
-        boolean fileExists = false;
-
-        if (file.exists()) {
-            fileExists = true;
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                StringBuilder sb = new StringBuilder();
-                String currLine;
-                while ((currLine = br.readLine()) != null) {
-                    sb.append(currLine);
-                    sb.append('\n');
-                }
-                br.close();
-                JSONArray jsonArray = new JSONArray(sb.toString());
-                /*username/password written into json array with format:
-                 *["<username>" , "<password>"]*/
-                retrievedUserName = jsonArray.getString(0);
-
-                //TODO GET USER DATA FROM DATABASE, CREATE NEW USER OBJECT.
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return fileExists;
     }
 
     /**

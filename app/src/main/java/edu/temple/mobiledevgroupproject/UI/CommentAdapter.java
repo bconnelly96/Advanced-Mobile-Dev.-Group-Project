@@ -68,9 +68,4 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             itemClickedListener.userItemClick(v, this.getAdapterPosition());
         }
     }
-
-    public void addComment(Comment newComment) {
-        commentList.add(newComment);
-        notifyItemInserted(commentList.size() - 1);
-    }
 }

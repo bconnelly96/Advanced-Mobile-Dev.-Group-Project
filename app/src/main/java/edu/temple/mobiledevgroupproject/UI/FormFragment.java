@@ -5,6 +5,7 @@
 
 package edu.temple.mobiledevgroupproject.UI;
 
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.location.Address;
@@ -12,6 +13,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +23,27 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.temple.mobiledevgroupproject.Objects.Comment;
+import edu.temple.mobiledevgroupproject.Objects.Constants;
 import edu.temple.mobiledevgroupproject.Objects.Job;
 import edu.temple.mobiledevgroupproject.Objects.Record;
+import edu.temple.mobiledevgroupproject.Objects.RequestHandler;
 import edu.temple.mobiledevgroupproject.Objects.SimpleDate;
 import edu.temple.mobiledevgroupproject.Objects.SimpleTime;
 import edu.temple.mobiledevgroupproject.Objects.User;
@@ -47,6 +61,7 @@ public class FormFragment extends Fragment {
     Button startButton;
     Button endButton;
     Button confirmButton;
+    ProgressDialog progressDialog;
 
     //other objects
     FormInterface formInterfaceListener;
@@ -99,6 +114,7 @@ public class FormFragment extends Fragment {
         startButton = mView.findViewById(R.id.start_button);
         endButton = mView.findViewById(R.id.end_button);
         confirmButton = mView.findViewById(R.id.confirm_button_f);
+        progressDialog = new ProgressDialog(getContext());
 
         Calendar cal = Calendar.getInstance();
         //android encodes jan. as 0 and dec. as 11
@@ -178,11 +194,8 @@ public class FormFragment extends Fragment {
                             .setUser(thisUser)
                             .setCommentList(commentList);
 
-                    System.out.println("******************************");
-                    System.out.println("******************************");
-                    System.out.println(newJob.toJSONObject().toString());
-                    System.out.println("******************************");
-                    System.out.println("******************************");
+                    //SEND JOB TO DB
+                    registerJob(newJob);
 
                     formInterfaceListener.getDataFromForm(newJob, thisUser);
                     String toastString = getResources().getString(R.string.job_created);
@@ -286,5 +299,54 @@ public class FormFragment extends Fragment {
         } else {
             endTime = new SimpleTime(hour, minuteOfHour, period);
         }
+    }
+
+    /**
+     * Helper method.
+     * Send Job instance to Database
+     * @param job Job instance to be sent to DB
+     */
+    private void registerJob(final Job job){
+        progressDialog.setMessage("Registering new job...");
+        progressDialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.NEW_JOB_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.hide();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Log.d("RegisterJobResponse", jsonObject.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.hide();
+                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("jobTitle", job.getJobTitle());
+                params.put("jobDescription", job.getJobDescription());
+                params.put("datePosted", "" + job.getDatePosted().getYear() + "-" + job.getDatePosted().getMonth() + "-" + job.getDatePosted().getDay());
+                params.put("dateOfJob", "" + job.getDateOfJob().getYear() + "-" + job.getDateOfJob().getMonth() + "-" + job.getDateOfJob().getDay());
+                params.put("startTime", "" + job.getStartTime().getHours() + ":" + job.getStartTime().getMinutes());
+                params.put("endTime", "" + job.getEndTime().getHours() + ":" + job.getEndTime().getMinutes());
+                params.put("latitude",String.valueOf(job.getLocation().latitude));
+                params.put("longitude",String.valueOf(job.getLocation().longitude));
+                params.put("postedBy",job.getUser().getUserName());
+                Record comments = new Record("Comments", "Comment");
+                params.put("comments", comments.toJSONObject().toString());
+                return params;
+            }
+        };
+        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 }

@@ -96,14 +96,6 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/job_user_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="username"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <TextView
                 android:id="@+id/job_posted_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

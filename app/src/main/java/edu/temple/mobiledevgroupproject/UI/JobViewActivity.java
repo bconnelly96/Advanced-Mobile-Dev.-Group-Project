@@ -1,25 +1,36 @@
 package edu.temple.mobiledevgroupproject.UI;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import edu.temple.mobiledevgroupproject.Objects.Comment;
+import edu.temple.mobiledevgroupproject.Objects.Constants;
 import edu.temple.mobiledevgroupproject.Objects.Job;
 import edu.temple.mobiledevgroupproject.Objects.Record;
+import edu.temple.mobiledevgroupproject.Objects.RequestHandler;
 import edu.temple.mobiledevgroupproject.Objects.SimpleDate;
 import edu.temple.mobiledevgroupproject.Objects.SimpleTime;
 import edu.temple.mobiledevgroupproject.Objects.User;
@@ -34,10 +45,10 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
     TextView startTimeView;
     TextView endTimeView;
     TextView jobLocView;
-    TextView jobUserView;
     TextView viewComments;
     Button confirmButton;
     FrameLayout container;
+    ProgressDialog progressDialog;
 
     Job jobToDisplay;
     User thisUser;
@@ -60,9 +71,9 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
         startTimeView = findViewById(R.id.job_start_view);
         endTimeView = findViewById(R.id.job_end_view);
         jobLocView = findViewById(R.id.job_loc_view);
-        jobUserView = findViewById(R.id.job_user_view);
         viewComments = findViewById(R.id.see_comment_view);
         confirmButton = findViewById(R.id.confirm_button_jv);
+        progressDialog = new ProgressDialog(this);
 
         if (jobToDisplay != null) {
             jobTitleView.setText(jobToDisplay.getJobTitle());
@@ -78,7 +89,6 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
             String endPeriod = jobToDisplay.getEndTime().getTimePeriod();
             endTimeView.setText("End Time: " + endHours + ":" + endMins + " " + endPeriod);
             jobLocView.setText(getAddrFromLatLng(jobToDisplay.getLocation()));
-            jobUserView.setText("Posted By: " + jobToDisplay.getUser().getUserName());
         }
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +97,8 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
                 launchDialog();
             }
         });
+
+        getCommentsFromDatabase();
 
         viewComments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +193,6 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
         });
     }
 
-
     /**
      * Implemented from CommentFragment.CommentPostedInterface
      * Add comment to this Job instance's commentList Record field.
@@ -199,5 +210,42 @@ public class JobViewActivity extends AppCompatActivity implements CommentFragmen
         if (container != null) {
             container.setVisibility(View.GONE);
         }
+    }
+
+    private void getCommentsFromDatabase(){
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.GET_COMMENTS_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("CommentResponse", response);
+                        response = response.substring(1, response.length()-1);
+                        String[] commentArr = response.split(", ");
+                        Comment temp;
+                        for(int i = 0; i < commentArr.length; i++){
+                            Log.d("Comment", commentArr[i]);
+                            temp = new Comment(commentArr[i], thisUser, new SimpleDate("2019-04-29"));
+                            jobToDisplay.updateCommentList(temp);
+                        }
+                        progressDialog.hide();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.hide();
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("jobTitle",jobToDisplay.getJobTitle());
+                return params;
+            }
+        };
+        RequestHandler.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 }

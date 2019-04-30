@@ -17,6 +17,12 @@ public class SimpleDate implements Serializable {
         this.day = day;
     }
 
+    public SimpleDate(String dateStr) {
+        this.year = Integer.valueOf(dateStr.substring(0,4));
+        this.month = Integer.valueOf(dateStr.substring(5,7));
+        this.day = Integer.valueOf(dateStr.substring(8,10));
+    }
+
     public int getYear() {
         return year;
     }
@@ -109,5 +115,10 @@ public class SimpleDate implements Serializable {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    @Override
+    public String toString() {
+        return "" + getYear() + "-" + getMonth() + "-" + getDay();
     }
 }

@@ -6,6 +6,7 @@
 
 package edu.temple.mobiledevgroupproject.UI;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.temple.mobiledevgroupproject.Objects.Constants;
+import edu.temple.mobiledevgroupproject.Objects.RequestHandler;
+import edu.temple.mobiledevgroupproject.Objects.SharedPrefManager;
 import edu.temple.mobiledevgroupproject.Objects.User;
 import edu.temple.mobiledevgroupproject.R;
 
@@ -28,6 +44,7 @@ public class LogInFragment extends Fragment {
     Button confirmButton;
     CheckBox rememberMeBox;
     TextView newTextView;
+    ProgressDialog progressDialog;
 
     LogInInterface logInListener;
     View view;
@@ -37,7 +54,7 @@ public class LogInFragment extends Fragment {
     }
 
     public interface LogInInterface {
-        void sendExistingUser(User existingUser, boolean saveData);
+        void sendExistingUser(User user, boolean saveData);
         void signUpClick();
     }
 
@@ -64,6 +81,7 @@ public class LogInFragment extends Fragment {
         confirmButton = view.findViewById(R.id.confirm_button_log);
         rememberMeBox = view.findViewById(R.id.checkbox_log);
         newTextView = view.findViewById(R.id.new_text_view);
+        progressDialog = new ProgressDialog(getContext());
 
         newTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,13 +95,11 @@ public class LogInFragment extends Fragment {
             public void onClick(View v) {
                 String userName = userNameField.getText().toString();
                 String password = passwordField.getText().toString();
-                if (allFieldsHaveInput() && logInInfoValid(userName, password)) {
-                    User constructedExistingUser = constructExistingUser(userName, password);
-                    if (rememberMeBox.isChecked()) {
-                        logInListener.sendExistingUser(constructedExistingUser, true);
-                    } else {
-                        logInListener.sendExistingUser(constructedExistingUser, false);
-                    }
+                if (allFieldsHaveInput()) {
+
+                    //DB
+                    userLogin(userName, password);
+                    //DB
                     Toast.makeText(getContext(), R.string.login_success, Toast.LENGTH_SHORT).show();
                 } else {
                     if (allFieldsHaveInput()) {
@@ -106,28 +122,52 @@ public class LogInFragment extends Fragment {
                 (passwordField.getText().toString().trim().length() != 0);
     }
 
-    /**
-     * Query database to:
-     * (1) Determine if userName param. matches some username in D.B.
-     * (2) Determine if password param. matches some hashed/salted password in D.B.
-     * @param userName a String retrieved from 'username' UI field
-     * @param password a String retrieved from 'password' UI field
-     * @return true if the userName, password params. match some username, password pair in the D.B.
-     */
-    private boolean logInInfoValid(String userName, String password) {
-        return false;
+    //Create a new user object based on the data in the database
+    private void userLogin(final String userName, final String password){
+        progressDialog.setMessage("Logging in...");
+        progressDialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.LOGIN_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            progressDialog.hide();
+                            JSONObject jsonObject = new JSONObject(response);
+                            if(!jsonObject.getBoolean("error")){
+                                SharedPrefManager.getInstance(getContext()).userLogin(jsonObject.getInt("id"),
+                                        jsonObject.getString("name"), jsonObject.getString("userName"),
+                                        jsonObject.getString("birthday"), jsonObject.getString("previousJobs"),
+                                        jsonObject.getDouble("rating"));
+                                logInListener.sendExistingUser(null, true);
+                            }
+                            else{
+                                Toast.makeText(getContext(),jsonObject.getString("message"),Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.hide();
+                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("userName",userName);
+                params.put("password",password);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
-    /**
-     * Query database retrieving information of User with username and password pair matching userName and password params.
-     * Construct new User object.
-     * @param userName username String of an already validated user
-     * @param password password String of an already validated user
-     * @return new User object corresponding to the userName and password params.
-     */
-    private User constructExistingUser(String userName, String password) {
-        return null;
-    }
+
 }
 
 
